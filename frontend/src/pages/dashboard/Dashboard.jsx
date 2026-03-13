@@ -64,7 +64,7 @@ export default function Dashboard() {
       {/* Welcome */}
       <div>
         <h2 className="font-display text-2xl font-bold text-slate-900">
-          Good morning, {user?.first_name}! 👋
+          Welcome, {user?.first_name}! 
         </h2>
         <p className="text-sm text-slate-500 mt-0.5">Here's what's happening in your system today.</p>
       </div>
