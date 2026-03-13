@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Maintenance Action &amp; Repair Log</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b border-primary/10 px-4 md:px-10 py-3">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">terminal</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight hidden sm:block">PC Maintenance System</h2>
+</div>
+<nav class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
+<div class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-medium hover:text-primary transition-colors border-b-2 border-primary pb-1" href="#">Inventory</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Reports</a>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-primary/10 text-primary hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-primary/10 text-primary hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+<div class="bg-primary/20 rounded-full h-10 w-10 flex items-center justify-center border border-primary/30 overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Technician profile photo thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB_Qo4M2qDvmH9elMIPZ6oRhbriYSj9LlfUolam9l9tR8vJOCRDOABs8P6IoJWaokcIdqlFDys0f-y7xgOQ-PSSI-O1OrHsym0tsZD4pCpkj3EY9USy2A_gid7BX8PKbckyvHSWIxJGR3_TQxYB5ZYDQ3iJfuPyQa1q5Km1ZGqUKgDxElZ4098qZasSpCiD4QoTPQzRXG8d4C5T-6RzIwqkht0gjRAOVy4TZX0c3pbzAOHH0pPob68H23J-UdnxgpmETGWY2X7ZyU"/>
+</div>
+</nav></div>
+</header>
+<main class="max-w-4xl mx-auto px-4 py-8">
+<!-- Page Header -->
+<div class="mb-8">
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Maintenance Action &amp; Repair Log</h1>
+<p class="text-slate-500 dark:text-slate-400 mt-2">Log repairs and asset replacements for your assigned hardware devices.</p>
+</div>
+<!-- Maintenance Log Form -->
+<div class="space-y-6">
+<!-- Section 1: Device Identification -->
+<div class="bg-white dark:bg-slate-800/50 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-2 mb-4 text-primary">
+<span class="material-symbols-outlined">devices</span>
+<h2 class="text-lg font-bold">Device Selection</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold">Select Assigned Device</label>
+<select class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-primary focus:border-primary">
+<option disabled="" selected="">Search by Asset ID or Name</option>
+<option>ASSET-001 - Dell XPS 15 (Admin Lab)</option>
+<option>ASSET-042 - HP EliteBook (Office 302)</option>
+<option>ASSET-109 - iMac 27" (Design Suite)</option>
+<option>ASSET-215 - Lenovo ThinkPad (Reception)</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold">Device Location</label>
+<div class="flex gap-4">
+<label class="flex-1 flex items-center justify-center gap-2 p-3 border border-slate-300 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-primary/5 has-[:checked]:bg-primary/10 has-[:checked]:border-primary transition-all">
+<input class="text-primary focus:ring-primary" name="location" type="radio" value="Lab"/>
+<span class="text-sm font-medium">Lab</span>
+</label>
+<label class="flex-1 flex items-center justify-center gap-2 p-3 border border-slate-300 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-primary/5 has-[:checked]:bg-primary/10 has-[:checked]:border-primary transition-all">
+<input class="text-primary focus:ring-primary" name="location" type="radio" value="Office"/>
+<span class="text-sm font-medium">Office</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Condition & Status -->
+<div class="bg-white dark:bg-slate-800/50 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-2 mb-4 text-primary">
+<span class="material-symbols-outlined">analytics</span>
+<h2 class="text-lg font-bold">Device Condition</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<label class="relative flex flex-col items-center gap-2 p-4 border border-slate-300 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-green-500/5 has-[:checked]:border-green-500 has-[:checked]:bg-green-500/10 transition-all">
+<input class="absolute top-2 right-2 text-green-500 focus:ring-green-500" name="condition" type="radio" value="Working"/>
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+<span class="text-sm font-bold">Working</span>
+</label>
+<label class="relative flex flex-col items-center gap-2 p-4 border border-slate-300 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-red-500/5 has-[:checked]:border-red-500 has-[:checked]:bg-red-500/10 transition-all">
+<input class="absolute top-2 right-2 text-red-500 focus:ring-red-500" name="condition" type="radio" value="Not Working"/>
+<span class="material-symbols-outlined text-red-500">cancel</span>
+<span class="text-sm font-bold text-center leading-tight">Not Working</span>
+</label>
+<label class="relative flex flex-col items-center gap-2 p-4 border border-slate-300 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-orange-500/5 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-500/10 transition-all">
+<input class="absolute top-2 right-2 text-orange-500 focus:ring-orange-500" name="condition" type="radio" value="Damaged"/>
+<span class="material-symbols-outlined text-orange-500">handyman</span>
+<span class="text-sm font-bold">Damaged</span>
+</label>
+<label class="relative flex flex-col items-center gap-2 p-4 border border-slate-300 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-slate-500/5 has-[:checked]:border-slate-500 has-[:checked]:bg-slate-500/10 transition-all">
+<input class="absolute top-2 right-2 text-slate-500 focus:ring-slate-500" name="condition" type="radio" value="Old"/>
+<span class="material-symbols-outlined text-slate-500">history</span>
+<span class="text-sm font-bold">Old</span>
+</label>
+</div>
+</div>
+<!-- Section 3: Action Details -->
+<div class="bg-white dark:bg-slate-800/50 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-2 mb-4 text-primary">
+<span class="material-symbols-outlined">settings_suggest</span>
+<h2 class="text-lg font-bold">Maintenance Action</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold">Action Type</label>
+<select class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-primary focus:border-primary" id="actionType">
+<option value="repair">Repair</option>
+<option value="replace">Replace</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold">Date of Action</label>
+<input class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-primary focus:border-primary" type="date"/>
+</div>
+</div>
+<!-- Conditional Fields -->
+<div class="space-y-4" id="repairFields">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold">Service Notes</label>
+<textarea class="w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-primary focus:border-primary placeholder:text-slate-400" placeholder="Describe the maintenance performed, parts used, etc..." rows="4"></textarea>
+</div>
+</div>
+<!-- Field for Replacement (Note: Using Tailwind hidden class but keeping logic accessible via HTML structure) -->
+<div class="mt-4 space-y-4 hidden" id="replaceFields">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold">New Asset ID</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">qr_code</span>
+<input class="w-full pl-10 rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-primary focus:border-primary placeholder:text-slate-400" placeholder="e.g. ASSET-NEW-999" type="text"/>
+</div>
+<p class="text-xs text-slate-500 italic">Please scan or type the asset ID of the replacement unit.</p>
+</div>
+</div>
+</div>
+<!-- Submit Section -->
+<div class="flex flex-col sm:flex-row gap-4 justify-end pt-4">
+<button class="px-8 py-3 rounded-lg font-bold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" type="button">
+                    Cancel
+                </button>
+<button class="px-8 py-3 rounded-lg font-bold bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined text-xl">save</span>
+                    Submit Maintenance Log
+                </button>
+</div>
+<!-- Map Preview (Location Context) -->
+<div class="mt-12 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all cursor-help">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs uppercase tracking-widest font-bold">Facility Map Context</span>
+</div>
+<div class="h-32 w-full rounded-xl bg-slate-200 dark:bg-slate-800 overflow-hidden relative border border-slate-200 dark:border-slate-700">
+<img alt="Map View" class="w-full h-full object-cover" data-alt="Technical campus facility floor plan map" data-location="Tech Campus, Lab B-12" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqZWl6znDPNJ-PCcLmxSFKjsB0Ch-J6TRt4jgeDPSTJ5UA6VDLCVHatwyP1sucA-I88g-6MioLrQngDXh0GLVfKOpUVL7UHqbGKaBya4wxX33dQ1ic5YsZunlUQy6SAd7tOU9ZD_E_R4nGTbuKz0jg--iVvVKgi9NKjl-IomH5QJcB-R2ozSjIXZ6cdhYcSCTQGVWF_ncMwVJaK0z67-7ZbpcwW8BTy3SLg80O4aBKgpBuQ-nZkRSr8uK0Yp4_G4wy3LUQJcAIxsc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark to-transparent"></div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-8 px-4 text-center">
+<p class="text-sm text-slate-500">© 2024 Personal Computer Maintenance System • Technician Terminal 4.2</p>
+</footer>
+</body></html>

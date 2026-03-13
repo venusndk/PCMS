@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Activity History - PC Maintenance System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen overflow-x-hidden">
+<!-- Side Navigation -->
+<aside class="w-64 bg-slate-900 dark:bg-black text-white flex-shrink-0 flex flex-col">
+<div class="p-6 border-b border-slate-800">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary rounded-lg">
+<span class="material-symbols-outlined text-white">computer</span>
+</div>
+<div>
+<h1 class="text-sm font-bold uppercase tracking-wider">PC MS</h1>
+<p class="text-[10px] text-slate-400">Technician Portal</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 p-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-sm font-medium">Assigned Tasks</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">add_box</span>
+<span class="text-sm font-medium">Register Equipment</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-sm font-medium">Activity History</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-800 mt-auto">
+<div class="flex items-center gap-3 px-4 py-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">JD</div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate">John Doe</p>
+<p class="text-[10px] text-slate-500 truncate">Senior Technician</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Header -->
+<header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-2">
+<h2 class="text-lg font-bold">Activity History</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-10 pr-4 py-1.5 text-sm rounded-lg bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary w-64" placeholder="Quick find asset..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<div class="p-8 flex-1">
+<!-- Title & Summary -->
+<div class="mb-8">
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">Maintenance Log History</h1>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Audit trail for all equipment maintenance and status changes.</p>
+</div>
+<!-- Filters -->
+<div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
+<div class="col-span-1 md:col-span-2 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary text-sm" placeholder="Search by Asset ID or Technician Notes..." type="text"/>
+</div>
+<div>
+<select class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary text-sm appearance-none cursor-pointer">
+<option value="">Device Category</option>
+<option>PC / Workstation</option>
+<option>Accessory</option>
+<option>Network Device</option>
+</select>
+</div>
+<div>
+<select class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary text-sm appearance-none cursor-pointer">
+<option value="">Status</option>
+<option>Working</option>
+<option>Damaged</option>
+<option>Repairing</option>
+<option>Decommissioned</option>
+</select>
+</div>
+<div>
+<input class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary text-sm" type="date"/>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Date</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Asset ID</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Device Category</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Action Taken</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">New Status</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Technician Notes</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap">Oct 24, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-primary whitespace-nowrap">#ASSET-8219</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">laptop_mac</span>
+                                            PC / Laptop
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-semibold uppercase">Repair</span>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span>Working</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm max-w-xs truncate">Replaced faulty cooling fan and cleaned internal dust. Applied fresh thermal paste.</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap">Oct 23, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-primary whitespace-nowrap">#ASSET-4402</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">router</span>
+                                            Network Device
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full bg-primary/20 text-primary text-xs font-semibold uppercase">Install</span>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span>Working</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm max-w-xs truncate">New Cisco router installed in Server Room B. Firmware updated to v2.4.</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap">Oct 22, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-primary whitespace-nowrap">#ASSET-1109</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">keyboard</span>
+                                            Accessory
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-semibold uppercase">Replace</span>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-red-500"></div>
+<span>Damaged</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm max-w-xs truncate">Mechanical keyboard spilled coffee. Asset decommissioned for parts.</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap">Oct 21, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-primary whitespace-nowrap">#ASSET-7721</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">desktop_windows</span>
+                                            PC / Workstation
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-semibold uppercase">Repair</span>
+</td>
+<td class="px-6 py-4 text-sm whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-amber-500"></div>
+<span>Monitoring</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm max-w-xs truncate">OS Reinstall performed. System under observation for random reboots.</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">visibility</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<span class="text-xs text-slate-500">Showing 1 to 4 of 128 results</span>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="px-3 py-1 rounded bg-primary text-white text-xs font-bold">1</button>
+<button class="px-3 py-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium">2</button>
+<button class="px-3 py-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium">3</button>
+<button class="p-1.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Stats -->
+<footer class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">task_alt</span>
+</div>
+<div>
+<p class="text-2xl font-bold">24</p>
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Completed this month</p>
+</div>
+</div>
+<div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined">build</span>
+</div>
+<div>
+<p class="text-2xl font-bold">15</p>
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Repairs In-Progress</p>
+</div>
+</div>
+<div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<p class="text-2xl font-bold">98%</p>
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Asset Uptime Rate</p>
+</div>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

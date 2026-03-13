@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Maintenance Log Detail - PCM System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 md:px-10 py-3 bg-white dark:bg-slate-900">
+<div class="flex items-center gap-4">
+<div class="size-8 flex items-center justify-center bg-primary rounded-lg text-white">
+<span class="material-symbols-outlined">computer</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">PCM System</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Activity History</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Assets</a>
+</nav>
+<div class="h-8 w-px bg-slate-200 dark:border-slate-800 mx-2"></div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500">notifications</span>
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">JD</div>
+</div>
+</div>
+</header>
+<main class="max-w-5xl mx-auto w-full p-4 md:p-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-2">
+<button class="flex items-center gap-1 hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+                            Back to History
+                        </button>
+</div>
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Maintenance Log Detail</h1>
+<div class="flex items-center gap-3 mt-1">
+<span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-xs font-mono text-slate-600 dark:text-slate-400">#LOG-5521</span>
+<span class="text-slate-400">•</span>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Created on Oct 24, 2023 at 14:30 PM</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-lg">print</span>
+                        Print
+                    </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">edit</span>
+                        Edit Log
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Left Column: Technician & Asset Summary -->
+<div class="lg:col-span-2 space-y-6">
+<!-- Main Log Information Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">engineering</span>
+                                Action Details
+                            </h3>
+<span class="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-bold rounded-full">COMPLETED</span>
+</div>
+<div class="p-6 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Technician</p>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-semibold text-slate-900 dark:text-white">John Doe</p>
+<p class="text-xs text-slate-500">Senior IT Technician</p>
+</div>
+</div>
+</div>
+<div>
+<p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Action Taken</p>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 bg-primary/10 text-primary text-sm font-bold rounded">REPAIR</span>
+<span class="material-symbols-outlined text-slate-300">arrow_forward</span>
+<span class="text-sm font-medium">Hardware Replacement</span>
+</div>
+</div>
+</div>
+<div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800">
+<p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Status Change</p>
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500">From</span>
+<span class="text-red-500 font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">error</span> Not Working
+                                        </span>
+</div>
+<span class="material-symbols-outlined text-slate-400">trending_flat</span>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500">To</span>
+<span class="text-green-500 font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Working
+                                        </span>
+</div>
+</div>
+</div>
+<div>
+<p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Technician Notes</p>
+<p class="text-slate-600 dark:text-slate-300 leading-relaxed bg-white dark:bg-slate-900 p-4 border border-slate-200 dark:border-slate-700 rounded-lg italic">
+                                    "The device was reported as failing to boot. Upon inspection, the primary SATA SSD had failed. Replaced with a new 512GB Samsung EVO. Reinstalled Windows 11 Pro and restored user profile from backup. Ran stress tests for 2 hours, system is stable."
+                                </p>
+</div>
+</div>
+</div>
+<!-- Device Specifications Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800">
+<h3 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">settings_suggest</span>
+                                Device Specifications
+                            </h3>
+</div>
+<div class="p-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+<div class="flex flex-col gap-1">
+<span class="text-xs text-slate-400 font-semibold uppercase">Memory (RAM)</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">memory</span>
+<span class="font-medium">16 GB DDR4</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs text-slate-400 font-semibold uppercase">Storage (HDD/SSD)</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">hard_drive</span>
+<span class="font-medium">512 GB NVMe SSD</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs text-slate-400 font-semibold uppercase">Operating System</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">desktop_windows</span>
+<span class="font-medium">Windows 11 Pro</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs text-slate-400 font-semibold uppercase">Processor</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">processing_cluster</span>
+<span class="font-medium">Intel Core i7-12700H</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs text-slate-400 font-semibold uppercase">Warranty</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">verified</span>
+<span class="font-medium text-green-600">Active (Exp 2025)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Asset Info & Quick Actions -->
+<div class="space-y-6">
+<!-- Asset Info Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+<div class="aspect-video bg-slate-200 dark:bg-slate-800 relative">
+<img class="w-full h-full object-cover" data-alt="Modern laptop on office desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGbquneNyu1ePnql36s2KwLXiR2h6XJcmcq85HE2ImVcVkp69HdmSDpCgUkwuaXqfeivcNgthQiOIYpFAD2tdqo7278LYXs4YTMf0hLfFO4bOLVGaL6b_7rtPnIabGdZ4dEk8MCYH3W9m12B2BKZzM0nggcK45MbGiHMym3SfN8UXzRjuMF_MRrUPdxMun1t_NUcbCvde5y28cnLDD7y3VIxYRKNSo6bHzVlZ_NKLxp6WU5xFMZ_K37bvDwOAv8IfeISQxvGYfeEU"/>
+<div class="absolute top-4 right-4">
+<span class="px-3 py-1 bg-primary text-white text-[10px] font-bold rounded-full shadow-lg">TAGGED</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+                                Asset Information
+                            </h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center py-2 border-b border-slate-50 dark:border-slate-800">
+<p class="text-sm text-slate-500">Asset ID</p>
+<p class="text-sm font-bold text-slate-900 dark:text-white">#ASSET-8219</p>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-50 dark:border-slate-800">
+<p class="text-sm text-slate-500">Category</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">PC / Laptop</p>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-50 dark:border-slate-800">
+<p class="text-sm text-slate-500">Brand</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Dell XPS 15</p>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-50 dark:border-slate-800">
+<p class="text-sm text-slate-500">Location</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-slate-400">location_on</span>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Lab 03, Floor 2</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-primary text-sm font-bold border border-primary/20 bg-primary/5 rounded-lg hover:bg-primary/10 transition-colors">
+                                View Asset Lifecycle
+                            </button>
+</div>
+</div>
+<!-- Delete Section -->
+<div class="p-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-xl">
+<h4 class="text-red-600 dark:text-red-400 font-bold text-sm mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">warning</span>
+                            Danger Zone
+                        </h4>
+<p class="text-xs text-red-500/80 mb-4 leading-relaxed">
+                            Deleting this log will permanently remove it from the maintenance records. This action cannot be undone.
+                        </p>
+<button class="w-full py-2 bg-white dark:bg-slate-900 text-red-600 border border-red-200 dark:border-red-900/40 rounded-lg text-sm font-bold hover:bg-red-600 hover:text-white transition-all">
+                            Delete Log Entry
+                        </button>
+</div>
+<!-- Information Alert -->
+<div class="p-4 bg-primary/5 border-l-4 border-primary rounded-r-lg">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-primary">info</span>
+<p class="text-xs text-slate-600 dark:text-slate-400 leading-tight">
+                                This log entry can be edited for another <span class="font-bold">12 minutes</span>. After that, it will be locked for auditing purposes.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto py-8 px-10 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+<div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
+<p>© 2023 Personal Computer Maintenance System</p>
+<div class="flex gap-6">
+<a class="hover:text-primary" href="#">System Manual</a>
+<a class="hover:text-primary" href="#">Support</a>
+<a class="hover:text-primary" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

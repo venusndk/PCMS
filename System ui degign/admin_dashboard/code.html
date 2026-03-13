@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PCM Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined block">settings_input_component</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-primary">PCM Admin</h1>
+</div>
+<nav class="flex-1 px-4 space-y-1 py-4">
+<a class="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-xl font-medium transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium transition-colors" href="#">
+<span class="material-symbols-outlined">engineering</span>
+<span>Technicians</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium transition-colors" href="#">
+<span class="material-symbols-outlined">devices</span>
+<span>Equipment</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Requests</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span>Reports</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<button class="flex w-full items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 rounded-xl font-medium transition-colors">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- Top NavBar -->
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary text-sm" placeholder="Search system resources..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-8 w-px bg-slate-200 dark:border-slate-800"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none">Alex Rivera</p>
+<p class="text-xs text-slate-500 mt-1">System Admin</p>
+</div>
+<div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-2 border-primary/10">
+<img alt="Admin Profile" class="h-full w-full object-cover" data-alt="Professional portrait of a male system administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0WXLnore8evvm_iJCLF8q-FpDFiAJ78WiA1fmCm4zSTgMvkRm9ykvqHJVDRgUOJKS1sWih86yVurcWxnqxbNHrMi_d6aMFozPHwZ5mMIRxRRIB19KVwdkrRq_WEJKE-q4ytoDDs838-JZMuiehNKXflRaq-ErULLtaxR3tQ4IR1zCVw9GHXRG1Lo2m2Uj4nsSNGsCE9iK7Bw_Wuz9dJRdVGaDzcON07m35_T-ZAnXOKoXlPnhHWzXhpZuNEgh3Pb2kSYJcFiuoK4"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Body -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<!-- Page Title -->
+<div>
+<h2 class="text-2xl font-bold tracking-tight">System Overview</h2>
+<p class="text-slate-500">Real-time monitoring of equipment health and personnel availability.</p>
+</div>
+<!-- Section 1: Equipment Status -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+                            Equipment Status
+                        </h3>
+<span class="text-xs font-medium px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded">Last updated: 2 mins ago</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- PC Status -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-lg">
+<span class="material-symbols-outlined">laptop_mac</span>
+</div>
+<span class="text-2xl font-bold">150</span>
+</div>
+<h4 class="font-medium text-slate-600 dark:text-slate-400 mb-4">Personal Computers</h4>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-emerald-600 font-semibold">Working</span>
+<span>142</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full" style="width: 94%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-red-500 font-semibold">Faulty</span>
+<span>8</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-red-500 h-full" style="width: 6%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Accessories Status -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 rounded-lg">
+<span class="material-symbols-outlined">mouse</span>
+</div>
+<span class="text-2xl font-bold">97</span>
+</div>
+<h4 class="font-medium text-slate-600 dark:text-slate-400 mb-4">Accessories</h4>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-emerald-600 font-semibold">Working</span>
+<span>85</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full" style="width: 87%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-red-500 font-semibold">Faulty</span>
+<span>12</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-red-500 h-full" style="width: 13%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Network Devices -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-amber-50 dark:bg-amber-900/20 text-amber-600 rounded-lg">
+<span class="material-symbols-outlined">router</span>
+</div>
+<span class="text-2xl font-bold">26</span>
+</div>
+<h4 class="font-medium text-slate-600 dark:text-slate-400 mb-4">Network Devices</h4>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-emerald-600 font-semibold">Working</span>
+<span>24</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full" style="width: 92%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-red-500 font-semibold">Faulty</span>
+<span>2</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-red-500 h-full" style="width: 8%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Technician Status -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">groups</span>
+                            Technician Availability
+                        </h3>
+<button class="text-sm font-medium text-primary hover:underline">View All Technicians</button>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<tr>
+<th class="px-6 py-4 text-sm font-semibold">Technician</th>
+<th class="px-6 py-4 text-sm font-semibold">Specialization</th>
+<th class="px-6 py-4 text-sm font-semibold">Status</th>
+<th class="px-6 py-4 text-sm font-semibold">Active Tasks</th>
+<th class="px-6 py-4 text-sm font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Tech 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="font-medium">John Doe</p>
+<p class="text-xs text-slate-500">j.doe@pcm-system.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Hardware / PC Repair</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Available
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm">0</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Tech 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">SM</div>
+<div>
+<p class="font-medium">Sarah Miller</p>
+<p class="text-xs text-slate-500">s.miller@pcm-system.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Network / Servers</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            Busy
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm">3</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Tech 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold">MK</div>
+<div>
+<p class="font-medium">Mike Kane</p>
+<p class="text-xs text-slate-500">m.kane@pcm-system.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Software Support</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                            Not Available
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm">0</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Tech 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">LW</div>
+<div>
+<p class="font-medium">Lisa Wong</p>
+<p class="text-xs text-slate-500">l.wong@pcm-system.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Peripherals / Audio</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Available
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm">1</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>
