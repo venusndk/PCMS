@@ -222,6 +222,7 @@ export default function Landing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
+           
 
           {/* Subtitle */}
           <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-lg">
