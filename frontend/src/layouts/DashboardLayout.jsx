@@ -18,14 +18,26 @@ const titles = {
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebar_collapsed');
+    return saved === 'true';
+  });
+
+  const toggleSidebar = () => {
+    setIsCollapsed(prev => {
+      const newState = !prev;
+      localStorage.setItem('sidebar_collapsed', newState);
+      return newState;
+    });
+  };
   const { pathname } = useLocation();
   const title = Object.entries(titles).find(([k]) => pathname.startsWith(k))?.[1] || 'PCM System';
 
   return (
     <div className="flex h-screen overflow-hidden bg-surface-50 dark:bg-surface-950 transition-colors duration-300">
       {/* Desktop sidebar */}
-      <div className="hidden lg:flex shrink-0">
-        <Sidebar />
+      <div className={`hidden lg:flex shrink-0 transition-all duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-64'}`}>
+        <Sidebar collapsed={isCollapsed} onToggle={toggleSidebar} />
       </div>
 
       {/* Mobile sidebar overlay */}
