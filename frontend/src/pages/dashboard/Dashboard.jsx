@@ -28,12 +28,10 @@ export default function Dashboard() {
   const [requests, setRequests] = useState(null);
   const [techs, setTechs] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null); // Add error state
 
   // --- Data fetching (unchanged except error handling) ---
-  const fetchData = useCallback(async (isManual = false) => {
-    if (isManual) setRefreshing(true);
+  const fetchData = useCallback(async () => {
     setError(null);
     try {
       const [o, d, r, t] = await Promise.all([
@@ -51,7 +49,6 @@ export default function Dashboard() {
       setError("Unable to load dashboard data. Please try again.");
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, []);
 
@@ -103,7 +100,7 @@ export default function Dashboard() {
         <AlertCircle size={48} className="text-rose-500 mb-4" />
         <p className="text-slate-700 dark:text-slate-300 font-medium mb-2">{error}</p>
         <button
-          onClick={() => fetchData(true)}
+          onClick={() => fetchData()}
           className="px-4 py-2 bg-primary-500 text-white rounded-lg text-sm font-bold hover:bg-primary-600 transition"
         >
           Retry
@@ -134,7 +131,10 @@ export default function Dashboard() {
                 </p>
               </div>
             </div>
-            <button className="px-4 py-1.5 bg-white text-primary-600 rounded-lg text-xs font-bold hover:bg-primary-50 transition-colors shadow-md">
+            <button 
+              onClick={() => window.location.href = '/requests'}
+              className="px-4 py-1.5 bg-white text-primary-600 rounded-lg text-xs font-bold hover:bg-primary-50 transition-colors shadow-md"
+            >
               Manage Requests
             </button>
           </motion.div>
@@ -247,7 +247,7 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="col-span-12 lg:col-span-7 card overflow-hidden"
+          className="col-span-12 card overflow-hidden"
         >
           <div className="px-6 py-5 border-b border-slate-100 dark:border-surface-800 flex items-center justify-between">
             <div>
@@ -306,104 +306,80 @@ export default function Dashboard() {
             </table>
           </div>
         </motion.div>
-
-        {/* Categories Breakdown with percentage and animated bars */}
-        <div className="col-span-12 lg:col-span-5 space-y-4">
-          {/* Equipment by Location */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="card p-6"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Monitor size={16} className="text-primary-500" />
-              <h3 className="font-display text-sm font-bold text-slate-800 dark:text-white uppercase tracking-tight">Equipment by Location</h3>
-            </div>
-            <div className="space-y-4">
-              {locationData.slice(0, 4).map((item, i) => (
-                <div key={i} className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-500 dark:text-slate-400">{item.location}</span>
-                    <span className="font-mono font-bold text-primary-600 dark:text-primary-400">
-                      {item.count} <span className="text-[10px] text-slate-400">({((item.count / maxLocationCount) * 100).toFixed(0)}%)</span>
-                    </span>
-                  </div>
-                  <div className="w-full h-1.5 bg-slate-100 dark:bg-surface-800 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${(item.count / maxLocationCount) * 100}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, ease: 'easeOut' }}
-                      className="h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full relative"
-                    >
-                      <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                    </motion.div>
-                  </div>
+        {/* Equipment by Location */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="col-span-12 card p-6"
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Monitor size={16} className="text-primary-500" />
+            <h3 className="font-display text-sm font-bold text-slate-800 dark:text-white uppercase tracking-tight">Equipment by Location</h3>
+          </div>
+          <div className="space-y-4">
+            {locationData.slice(0, 4).map((item, i) => (
+              <div key={i} className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-500 dark:text-slate-400">{item.location}</span>
+                  <span className="font-mono font-bold text-primary-600 dark:text-primary-400">
+                    {item.count} <span className="text-[10px] text-slate-400">({((item.count / maxLocationCount) * 100).toFixed(0)}%)</span>
+                  </span>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Support Request Trends */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="card p-6"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Zap size={16} className="text-primary-500" />
-              <h3 className="font-display text-sm font-bold text-slate-800 dark:text-white uppercase tracking-tight">Support Request Trends</h3>
-            </div>
-            <div className="space-y-4">
-              {statusData.slice(0, 4).map((item, i) => (
-                <div key={i} className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-500 dark:text-slate-400">{item.status}</span>
-                    <span className="font-mono font-bold text-primary-600 dark:text-primary-400">
-                      {item.count} <span className="text-[10px] text-slate-400">({((item.count / maxStatusCount) * 100).toFixed(0)}%)</span>
-                    </span>
-                  </div>
-                  <div className="w-full h-1.5 bg-slate-100 dark:bg-surface-800 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${(item.count / maxStatusCount) * 100}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, ease: 'easeOut', delay: i * 0.1 }}
-                      className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full relative"
-                    >
-                      <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                    </motion.div>
-                  </div>
+                <div className="w-full h-1.5 bg-slate-100 dark:bg-surface-800 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${(item.count / maxLocationCount) * 100}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: 'easeOut' }}
+                    className="h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full relative"
+                  >
+                    <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                  </motion.div>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Support Request Trends */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="col-span-12 card p-6"
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Zap size={16} className="text-primary-500" />
+            <h3 className="font-display text-sm font-bold text-slate-800 dark:text-white uppercase tracking-tight">Support Request Trends</h3>
+          </div>
+          <div className="space-y-4">
+            {statusData.slice(0, 4).map((item, i) => (
+              <div key={i} className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-500 dark:text-slate-400">{item.status}</span>
+                  <span className="font-mono font-bold text-primary-600 dark:text-primary-400">
+                    {item.count} <span className="text-[10px] text-slate-400">({((item.count / maxStatusCount) * 100).toFixed(0)}%)</span>
+                  </span>
+                </div>
+                <div className="w-full h-1.5 bg-slate-100 dark:bg-surface-800 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${(item.count / maxStatusCount) * 100}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: 'easeOut', delay: i * 0.1 }}
+                    className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full relative"
+                  >
+                    <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                  </motion.div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
       </div>
 
-      {/* Footer Actions */}
-      <div className="flex items-center justify-center gap-4 mt-12 mb-8">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => fetchData(true)}
-          disabled={refreshing}
-          className="btn-secondary flex items-center gap-2 py-3 px-6 shadow-sm"
-        >
-          <RefreshCw size={18} className={refreshing ? 'animate-spin' : ''} />
-          <span className="font-bold">Refresh Data</span>
-        </motion.button>
-        
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="btn-primary py-3 px-6 shadow-lg shadow-primary-500/20 font-bold"
-        >
-          Quick Action
-        </motion.button>
-      </div>
     </div>
   );
 }

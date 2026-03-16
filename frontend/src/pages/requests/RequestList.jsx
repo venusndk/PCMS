@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { requestService } from '../../api/requestService';
 import { technicianService } from '../../api/technicianService';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import Modal from '../../components/Modal';
 import { useForm } from 'react-hook-form';
 import { ClipboardList, Eye, UserPlus, CheckCircle, Trash2, Filter, RefreshCw, Clock } from 'lucide-react';
@@ -24,7 +25,9 @@ const STATUSES = ['Pending', 'Technician Assigned', 'Fixed', 'Not Fixed'];
 const statusBadge = (s) => <StatusBadge status={s} />;
 
 export default function RequestList() {
-  const { isAdmin, isTechnician } = useAuth();
+  const { user } = useAuth();
+  const isAdmin = user?.role?.toLowerCase() === 'administrator';
+  const isTechnician = user?.role?.toLowerCase() === 'technician';
   const [items,    setItems]    = useState([]);
   const [techs,    setTechs]    = useState([]);
   const [loading,  setLoading]  = useState(true);
@@ -33,17 +36,16 @@ export default function RequestList() {
   const [filter,   setFilter]   = useState({ status: '' });
   const [saving,   setSaving]   = useState(false);
   const [error,    setError]    = useState('');
+  const { showToast } = useToast();
   const { register, handleSubmit, reset } = useForm();
 
   const load = useCallback(() => {
     setLoading(true);
     requestService.list(filter).then(r => setItems(r.data.results || r.data)).finally(() => setLoading(false));
-  }, [filter]);
+    if (isAdmin) technicianService.list().then(r => setTechs(r.data.results || r.data));
+  }, [filter, isAdmin]);
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => { 
-    if (isAdmin) technicianService.list().then(r => setTechs(r.data.results || r.data)); 
-  }, [isAdmin]);
 
   const openView   = (r) => { setSelected(r); setModal('view'); };
   const openAssign = (r) => { setSelected(r); reset({}); setModal('assign'); setError(''); };
@@ -54,9 +56,16 @@ export default function RequestList() {
   const handleAssign = async (data) => {
     setSaving(true); setError('');
     try {
-      await requestService.assignTechnician(selected.id, { technician_id: parseInt(data.technician_id) });
+      await requestService.assignTechnician(selected.id, { 
+        technician_id: parseInt(data.technician_id) 
+      });
+      showToast('Technician assigned successfully!', 'success');
       load(); close();
-    } catch (e) { setError(e.response?.data?.error || 'Failed to assign.'); }
+    } catch (e) { 
+      const msg = e.response?.data?.error || e.response?.data?.detail || 'Failed to assign.';
+      setError(msg);
+      showToast(msg, 'error');
+    }
     finally { setSaving(false); }
   };
 
@@ -64,15 +73,25 @@ export default function RequestList() {
     setSaving(true); setError('');
     try {
       await requestService.updateStatus(selected.id, { status: data.status });
+      showToast('Status updated successfully!', 'success');
       load(); close();
-    } catch (e) { setError(e.response?.data?.error || 'Failed to update status.'); }
+    } catch (e) { 
+      const msg = e.response?.data?.error || e.response?.data?.detail || 'Failed to update status.';
+      setError(msg);
+      showToast(msg, 'error');
+    }
     finally { setSaving(false); }
   };
 
   const handleDelete = async () => {
     setSaving(true);
-    try { await requestService.delete(selected.id); load(); close(); }
-    finally { setSaving(false); }
+    try { 
+      await requestService.delete(selected.id); 
+      showToast('Request deleted successfully.', 'success');
+      load(); close(); 
+    } catch (e) {
+      showToast('Failed to delete request.', 'error');
+    } finally { setSaving(false); }
   };
 
   return (
@@ -128,14 +147,14 @@ export default function RequestList() {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    className={`table-row group ${isOld(r.date) && r.status === 'Pending' ? 'bg-rose-50/20 dark:bg-rose-900/5' : ''}`}
+                    className={`table-row group ${isOld(r.date) && r.status?.toLowerCase() === 'pending' ? 'bg-rose-50/20 dark:bg-rose-900/5' : ''}`}
                   >
                     <td className="px-6 py-4 font-mono text-[10px] font-bold text-slate-400">#{r.id}</td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <p className="font-bold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2">
                           {r.first_name} {r.last_name}
-                          {isOld(r.date) && r.status === 'Pending' && (
+                          {isOld(r.date) && r.status?.toLowerCase() === 'pending' && (
                             <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" title="Old Request" />
                           )}
                         </p>
@@ -160,8 +179,8 @@ export default function RequestList() {
                     <td className="px-6 py-4">
                       {r.assigned_technician ? (
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-[10px] font-bold text-primary-600">
-                            {r.assigned_technician.first_name[0]}
+                          <div className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-[10px] font-bold text-primary-600 uppercase">
+                            {r.assigned_technician.first_name?.[0] || 'T'}
                           </div>
                           <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
                             {r.assigned_technician.first_name}
@@ -176,12 +195,12 @@ export default function RequestList() {
                         <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openView(r)} className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all font-bold" title="View details">
                           <Eye className="w-4 h-4" />
                         </motion.button>
-                        {isAdmin && r.status === 'Pending' && (
+                        {isAdmin && (
                           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openAssign(r)} className="p-2 rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all font-bold" title="Assign technician">
                             <UserPlus className="w-4 h-4" />
                           </motion.button>
                         )}
-                        {(isAdmin || isTechnician) && r.status === 'Technician Assigned' && (
+                        {(isAdmin || isTechnician) && r.status?.toLowerCase() === 'technician assigned' && (
                           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openStatus(r)} className="p-2 rounded-lg text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all font-bold" title="Update status">
                             <CheckCircle className="w-4 h-4" />
                           </motion.button>
@@ -243,12 +262,12 @@ export default function RequestList() {
             <label className="label">Select Technician *</label>
             <select className="input-premium" {...register('technician_id', { required: true })}>
               <option value="">Choose technician...</option>
-              {Array.isArray(techs) && techs.filter(t => t.status === 'Available').map(t => (
+              {Array.isArray(techs) && techs.filter(t => t.status?.toLowerCase() === 'available').map(t => (
                 <option key={t.id} value={t.id}>{t.first_name} {t.last_name} ({t.status})</option>
               ))}
-              {Array.isArray(techs) && techs.filter(t => t.status !== 'Available').length > 0 && (
+              {Array.isArray(techs) && techs.filter(t => t.status?.toLowerCase() !== 'available').length > 0 && (
                 <optgroup label="Other technicians">
-                  {techs.filter(t => t.status !== 'Available').map(t => (
+                  {techs.filter(t => t.status?.toLowerCase() !== 'available').map(t => (
                     <option key={t.id} value={t.id}>{t.first_name} {t.last_name} ({t.status})</option>
                   ))}
                 </optgroup>

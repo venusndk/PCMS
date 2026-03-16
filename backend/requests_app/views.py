@@ -50,7 +50,7 @@ class RequestListView(APIView):
     )
     def get(self, request):
         # Technicians only see requests assigned to them
-        if request.user.role == 'Technician':
+        if request.user.role and request.user.role.lower() == 'technician':
             queryset = Request.objects.filter(assigned_technician=request.user)
         else:
             queryset = Request.objects.all()
@@ -139,7 +139,7 @@ class AssignTechnicianView(APIView):
             technician_id = serializer.validated_data['technician_id']
 
             try:
-                technician = User.objects.get(pk=technician_id, role='Technician')
+                technician = User.objects.get(pk=technician_id, role__iexact='Technician')
             except User.DoesNotExist:
                 return Response({'error': 'Technician not found.'}, status=status.HTTP_404_NOT_FOUND)
 

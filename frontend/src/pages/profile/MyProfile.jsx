@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../api/authService';
+import { useToast } from '../../context/ToastContext';
 import { useForm } from 'react-hook-form';
 import { User, Lock, Save, CheckCircle, Camera, Shield, Mail, Phone, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,6 +9,7 @@ import StatusBadge from '../../components/dashboard/StatusBadge';
 
 export default function MyProfile() {
   const { user, updateUser } = useAuth();
+  const { showToast } = useToast();
   const [tab,     setTab]     = useState('profile');
   const [saving,  setSaving]  = useState(false);
   const [success, setSuccess] = useState('');
@@ -53,7 +55,12 @@ export default function MyProfile() {
       const res = await authService.updateMe(data);
       updateUser(res.data.user || res.data);
       setSuccess('Profile updated successfully!');
-    } catch (e) { setError(e.response?.data?.detail || 'Failed to update profile.'); }
+      showToast('Profile updated successfully!');
+    } catch (e) { 
+      const msg = e.response?.data?.detail || 'Failed to update profile.';
+      setError(msg);
+      showToast(msg, 'error');
+    }
     finally { setSaving(false); }
   };
 
@@ -62,8 +69,13 @@ export default function MyProfile() {
     try {
       await authService.changePassword({ old_password: data.old_password, new_password: data.new_password });
       setSuccess('Password changed successfully!');
+      showToast('Password changed successfully!');
       resetPass();
-    } catch (e) { setError(e.response?.data?.error || e.response?.data?.detail || 'Failed to change password.'); }
+    } catch (e) { 
+      const msg = e.response?.data?.error || e.response?.data?.detail || 'Failed to change password.';
+      setError(msg); 
+      showToast(msg, 'error');
+    }
     finally { setSaving(false); }
   };
 

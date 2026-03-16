@@ -22,6 +22,7 @@ import RequestList    from '../pages/requests/RequestList';
 import ReportList     from '../pages/reports/ReportList';
 import TechnicianList from '../pages/technicians/TechnicianList';
 import MyProfile      from '../pages/profile/MyProfile';
+import Settings       from '../pages/settings/Settings';
 
 export default function AppRouter() {
   return (
@@ -52,6 +53,7 @@ export default function AppRouter() {
           </ProtectedRoute>
         } />
         <Route path="profile"      element={<MyProfile />} />
+        <Route path="settings"     element={<Settings />} />
       </Route>
 
       {/* Catch-all */}

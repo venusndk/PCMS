@@ -20,7 +20,8 @@ class IsAdministrator(BasePermission):
         return (
             request.user and
             request.user.is_authenticated and
-            request.user.role == 'Administrator'
+            request.user.role and
+            request.user.role.lower() == 'administrator'
         )
 
 
@@ -34,7 +35,8 @@ class IsTechnician(BasePermission):
         return (
             request.user and
             request.user.is_authenticated and
-            request.user.role == 'Technician'
+            request.user.role and
+            request.user.role.lower() == 'technician'
         )
 
 
@@ -49,5 +51,6 @@ class IsAdminOrTechnician(BasePermission):
         return (
             request.user and
             request.user.is_authenticated and
-            request.user.role in ['Administrator', 'Technician']
+            request.user.role and
+            request.user.role.lower() in ['administrator', 'technician']
         )

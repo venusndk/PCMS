@@ -14,6 +14,7 @@ const titles = {
   '/reports':     'Maintenance Reports',
   '/technicians': 'Technicians',
   '/profile':     'My Profile',
+  '/settings':    'Settings',
 };
 
 export default function DashboardLayout() {

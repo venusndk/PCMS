@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Monitor, Mouse, Network, ClipboardList,
-  FileText, Users, User, LogOut, Shield, ChevronRight
+  FileText, Users, User, LogOut, Shield, ChevronRight, Settings as SettingsIcon 
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
@@ -18,6 +18,7 @@ const adminLinks = [
   { to: '/reports',      icon: FileText,        label: 'Reports' },
   { to: '/technicians',  icon: Users,           label: 'Technicians' },
   { to: '/profile',      icon: User,            label: 'My Profile' },
+  { to: '/settings',     icon: SettingsIcon,    label: 'Settings' },
 ];
 
 const techLinks = [
@@ -26,6 +27,7 @@ const techLinks = [
   { to: '/requests',    icon: ClipboardList,   label: 'My Requests' },
   { to: '/reports',     icon: FileText,        label: 'Reports' },
   { to: '/profile',     icon: User,            label: 'My Profile' },
+  { to: '/settings',    icon: SettingsIcon,    label: 'Settings' },
 ];
 
 export default function Sidebar({ mobile = false, onClose, collapsed = false, onToggle }) {
