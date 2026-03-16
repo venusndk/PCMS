@@ -51,41 +51,41 @@ export default function Register() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="label">First Name *</label>
-                <input className={`input ${errors.first_name ? 'input-error' : ''}`} placeholder="John"
+                <input className={`input-premium ${errors.first_name ? 'border-rose-500 shadow-rose-100/10' : ''}`} placeholder="John"
                   {...register('first_name', { required: 'Required' })} />
-                {errors.first_name && <p className="error-msg">{errors.first_name.message}</p>}
+                {errors.first_name && <p className="text-[10px] font-black text-rose-500 mt-1 uppercase tracking-widest">{errors.first_name.message}</p>}
               </div>
               <div>
                 <label className="label">Last Name *</label>
-                <input className={`input ${errors.last_name ? 'input-error' : ''}`} placeholder="Doe"
+                <input className={`input-premium ${errors.last_name ? 'border-rose-500 shadow-rose-100/10' : ''}`} placeholder="Doe"
                   {...register('last_name', { required: 'Required' })} />
-                {errors.last_name && <p className="error-msg">{errors.last_name.message}</p>}
+                {errors.last_name && <p className="text-[10px] font-black text-rose-500 mt-1 uppercase tracking-widest">{errors.last_name.message}</p>}
               </div>
             </div>
 
             <div>
               <label className="label">Email Address *</label>
-              <input type="email" className={`input ${errors.email ? 'input-error' : ''}`} placeholder="john@example.com"
+              <input type="email" className={`input-premium ${errors.email ? 'border-rose-500 shadow-rose-100/10' : ''}`} placeholder="john@example.com"
                 {...register('email', { required: 'Email is required' })} />
-              {errors.email && <p className="error-msg">{errors.email.message}</p>}
+              {errors.email && <p className="text-[10px] font-black text-rose-500 mt-1 uppercase tracking-widest">{errors.email.message}</p>}
             </div>
 
             <div>
               <label className="label">Phone</label>
-              <input className="input" placeholder="+1234567890" {...register('phone')} />
+              <input className="input-premium" placeholder="+1234567890" {...register('phone')} />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="label">Role *</label>
-                <select className="input" {...register('role', { required: 'Required' })}>
+                <select className="input-premium" {...register('role', { required: 'Required' })}>
                   <option value="Administrator">Administrator</option>
                   <option value="Technician">Technician</option>
                 </select>
               </div>
               <div>
                 <label className="label">Status</label>
-                <select className="input" {...register('status')}>
+                <select className="input-premium" {...register('status')}>
                   <option value="Available">Available</option>
                   <option value="Busy">Busy</option>
                   <option value="Not Available">Not Available</option>
@@ -95,22 +95,22 @@ export default function Register() {
 
             <div>
               <label className="label">Password *</label>
-              <input type="password" className={`input ${errors.password ? 'input-error' : ''}`} placeholder="Min. 6 characters"
+              <input type="password" className={`input-premium ${errors.password ? 'border-rose-500 shadow-rose-100/10' : ''}`} placeholder="Min. 6 characters"
                 {...register('password', { required: 'Password required', minLength: { value: 6, message: 'Min 6 characters' } })} />
-              {errors.password && <p className="error-msg">{errors.password.message}</p>}
+              {errors.password && <p className="text-[10px] font-black text-rose-500 mt-1 uppercase tracking-widest">{errors.password.message}</p>}
             </div>
 
             <div>
               <label className="label">Confirm Password *</label>
-              <input type="password" className={`input ${errors.confirm_password ? 'input-error' : ''}`} placeholder="Repeat password"
+              <input type="password" className={`input-premium ${errors.confirm_password ? 'border-rose-500 shadow-rose-100/10' : ''}`} placeholder="Repeat password"
                 {...register('confirm_password', {
                   required: 'Please confirm password',
                   validate: v => v === watch('password') || 'Passwords do not match'
                 })} />
-              {errors.confirm_password && <p className="error-msg">{errors.confirm_password.message}</p>}
+              {errors.confirm_password && <p className="text-[10px] font-black text-rose-500 mt-1 uppercase tracking-widest">{errors.confirm_password.message}</p>}
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-2.5 mt-2">
+            <button type="submit" disabled={loading} className="btn-primary-premium w-full justify-center py-3.5 text-sm font-black uppercase tracking-widest shadow-xl shadow-primary-500/20">
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

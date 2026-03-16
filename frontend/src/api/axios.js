@@ -29,11 +29,29 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+const MAX_RETRIES = 2;
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
+    // ── Automatic Retries for Indempotent Requests ───────────
+    if (
+      (error.code === 'ECONNABORTED' || error.response?.status >= 500) &&
+      !originalRequest._retryCount &&
+      ['get', 'head', 'options'].includes(originalRequest.method)
+    ) {
+      originalRequest._retryCount = (originalRequest._retryCount || 0) + 1;
+      if (originalRequest._retryCount <= MAX_RETRIES) {
+        // Backoff: 1s, 2s
+        const backoff = originalRequest._retryCount * 1000;
+        await new Promise(resolve => setTimeout(resolve, backoff));
+        return api(originalRequest);
+      }
+    }
+
+    // ── Response interceptor: refresh token on 401 ───────────────
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -50,7 +68,10 @@ api.interceptors.response.use(
       const refresh = tokenManager.getRefresh();
       if (!refresh) {
         tokenManager.clearTokens();
-        window.location.href = '/login';
+        // Avoid infinite reload loops if we're already on /login
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
         return Promise.reject(error);
       }
 
@@ -63,7 +84,9 @@ api.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
         tokenManager.clearTokens();
-        window.location.href = '/login';
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

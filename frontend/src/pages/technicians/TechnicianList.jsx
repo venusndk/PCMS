@@ -6,10 +6,8 @@ import Modal from '../../components/Modal';
 import { useForm } from 'react-hook-form';
 import { Users, Pencil, Trash2, RefreshCw, UserPlus } from 'lucide-react';
 
-const statusBadge = (s) => {
-  const map = { Available: 'badge-green', Busy: 'badge-amber', 'Not Available': 'badge-red' };
-  return <span className={`badge ${map[s] || 'badge-slate'}`}>{s}</span>;
-};
+import StatusBadge from '../../components/dashboard/StatusBadge';
+import { motion } from 'framer-motion';
 
 export default function TechnicianList() {
   const [items,    setItems]    = useState([]);
@@ -116,50 +114,82 @@ export default function TechnicianList() {
           <p className="text-sm font-medium">No technicians found</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map(t => (
-            <div key={t.id} className="card p-5 hover:shadow-card-hover transition-shadow">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-bold text-primary-700">{t.first_name?.[0]}{t.last_name?.[0]}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((t, idx) => (
+            <motion.div 
+              key={t.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              whileHover={{ y: -5 }}
+              className="card-hover p-6 group relative overflow-hidden"
+            >
+              <div className="flex items-start justify-between mb-5 relative z-10">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary-50 dark:bg-primary-900/40 rounded-2xl flex items-center justify-center ring-1 ring-primary-100 dark:ring-primary-800 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-sm font-extrabold text-primary-700 dark:text-primary-400 uppercase tracking-tighter">
+                      {t.first_name?.[0]}{t.last_name?.[0]}
+                    </span>
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-800 text-sm">{t.first_name} {t.last_name}</p>
-                    <p className="text-xs text-slate-400">{t.email}</p>
+                    <p className="font-display font-bold text-slate-800 dark:text-white text-base leading-tight">
+                      {t.first_name} {t.last_name}
+                    </p>
+                    <p className="text-[11px] font-medium text-slate-400 group-hover:text-primary-500 transition-colors uppercase tracking-tight">
+                      {t.email}
+                    </p>
                   </div>
                 </div>
-                {statusBadge(t.status)}
+                <StatusBadge status={t.status} />
               </div>
 
               {t.phone && (
-                <p className="text-xs text-slate-500 mb-3">📱 {t.phone}</p>
+                <div className="flex items-center gap-2 mb-5 px-3 py-1.5 bg-slate-50 dark:bg-surface-800/50 rounded-lg border border-slate-100 dark:border-surface-800/50 w-fit">
+                  <span className="text-[10px]">📱</span>
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-400 font-mono">{t.phone}</span>
+                </div>
               )}
 
-              <div className="grid grid-cols-3 gap-2 p-3 bg-slate-50 rounded-lg text-center mb-3">
+              <div className="grid grid-cols-3 gap-3 p-4 bg-slate-50/50 dark:bg-surface-800/20 rounded-2xl border border-slate-100 dark:border-surface-800/50 text-center mb-6 relative z-10">
                 <div>
-                  <p className="font-mono text-sm font-bold text-slate-800">{t.assigned_pcs || 0}</p>
-                  <p className="text-xs text-slate-400">PCs</p>
+                  <p className="font-mono text-lg font-black text-slate-800 dark:text-white leading-none mb-1">{t.assigned_pcs || 0}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">PCs</p>
                 </div>
                 <div>
-                  <p className="font-mono text-sm font-bold text-slate-800">{t.assigned_accessories || 0}</p>
-                  <p className="text-xs text-slate-400">Access.</p>
+                  <p className="font-mono text-lg font-black text-slate-800 dark:text-white leading-none mb-1">{t.assigned_accessories || 0}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Acc.</p>
                 </div>
                 <div>
-                  <p className="font-mono text-sm font-bold text-slate-800">{t.assigned_network_devices || 0}</p>
-                  <p className="text-xs text-slate-400">Network</p>
+                  <p className="font-mono text-lg font-black text-slate-800 dark:text-white leading-none mb-1">{t.assigned_network_devices || 0}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Net</p>
                 </div>
               </div>
 
-              <div className="flex gap-2">
-                <button onClick={() => openEdit(t)} className="btn-secondary btn-sm flex-1 justify-center">
-                  <Pencil className="w-3 h-3" /> Edit
-                </button>
-                <button onClick={() => openDelete(t)} className="btn-ghost btn-sm px-3 text-red-500 hover:bg-red-50">
-                  <Trash2 className="w-3 h-3" />
-                </button>
+              <div className="flex gap-3 relative z-10">
+                <motion.button 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => openEdit(t)} 
+                  className="btn-secondary btn-sm flex-1 justify-center py-2 font-bold text-[11px] uppercase tracking-wider"
+                >
+                  <Pencil className="w-3.5 h-3.5" /> Edit Profile
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.02, backgroundColor: '#fef2f2' }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => openDelete(t)} 
+                  className="p-2 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all border border-transparent hover:border-rose-100"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </motion.button>
               </div>
-            </div>
+              
+              {/* Decorative accent bar */}
+              <div className={`absolute left-0 top-0 bottom-0 w-1 ${t.status === 'Available' ? 'bg-emerald-500' : t.status === 'Busy' ? 'bg-amber-500' : 'bg-rose-500'} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+              
+              {/* Decorative background circle */}
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary-500 opacity-[0.03] rounded-full group-hover:scale-150 transition-transform duration-700 blur-xl" />
+            </motion.div>
           ))}
         </div>
       )}
@@ -171,28 +201,28 @@ export default function TechnicianList() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="label">First Name</label>
-              <input className="input" {...register('first_name')} />
+              <input className="input-premium" {...register('first_name')} />
             </div>
             <div>
               <label className="label">Last Name</label>
-              <input className="input" {...register('last_name')} />
+              <input className="input-premium" {...register('last_name')} />
             </div>
           </div>
           <div>
             <label className="label">Phone</label>
-            <input className="input" {...register('phone')} />
+            <input className="input-premium" {...register('phone')} />
           </div>
           <div>
             <label className="label">Status</label>
-            <select className="input" {...register('status')}>
+            <select className="input-premium" {...register('status')}>
               <option value="Available">Available</option>
               <option value="Busy">Busy</option>
               <option value="Not Available">Not Available</option>
             </select>
           </div>
-          <div className="flex gap-3 justify-end pt-2 border-t border-slate-100">
+          <div className="flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800">
             <button type="button" onClick={close} className="btn-secondary">Cancel</button>
-            <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Saving...' : 'Save Changes'}</button>
+            <button type="submit" disabled={saving} className="btn-primary-premium">{saving ? 'Saving...' : 'Save Changes'}</button>
           </div>
         </form>
       </Modal>
@@ -217,18 +247,18 @@ export default function TechnicianList() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="label">First Name *</label>
-              <input className="input" {...regAdd('first_name', { required: 'First name is required' })} />
+              <input className="input-premium" {...regAdd('first_name', { required: 'First name is required' })} />
               {addErrors.first_name && <p className="text-xs text-red-500 mt-1">{addErrors.first_name.message}</p>}
             </div>
             <div>
               <label className="label">Last Name *</label>
-              <input className="input" {...regAdd('last_name', { required: 'Last name is required' })} />
+              <input className="input-premium" {...regAdd('last_name', { required: 'Last name is required' })} />
               {addErrors.last_name && <p className="text-xs text-red-500 mt-1">{addErrors.last_name.message}</p>}
             </div>
           </div>
           <div>
             <label className="label">Email *</label>
-            <input type="email" className="input" {...regAdd('email', { 
+            <input type="email" className="input-premium" {...regAdd('email', { 
               required: 'Email is required',
               pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email format' }
             })} />
@@ -236,12 +266,12 @@ export default function TechnicianList() {
           </div>
           <div>
             <label className="label">Phone</label>
-            <input className="input" {...regAdd('phone')} />
+            <input className="input-premium" {...regAdd('phone')} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="label">Password *</label>
-              <input type="password" className="input" {...regAdd('password', { 
+              <input type="password" className="input-premium" {...regAdd('password', { 
                 required: 'Password is required',
                 minLength: { value: 6, message: 'Min 6 characters' }
               })} />
@@ -249,7 +279,7 @@ export default function TechnicianList() {
             </div>
             <div>
               <label className="label">Confirm Password *</label>
-              <input type="password" className="input" {...regAdd('confirm_password', { 
+              <input type="password" className="input-premium" {...regAdd('confirm_password', { 
                 required: 'Please confirm password',
                 validate: v => v === watchAdd('password') || 'Passwords do not match'
               })} />
@@ -258,15 +288,15 @@ export default function TechnicianList() {
           </div>
           <div>
             <label className="label">Status</label>
-            <select className="input" {...regAdd('status')} defaultValue="Available">
+            <select className="input-premium" {...regAdd('status')} defaultValue="Available">
               <option value="Available">Available</option>
               <option value="Busy">Busy</option>
               <option value="Not Available">Not Available</option>
             </select>
           </div>
-          <div className="flex gap-3 justify-end pt-2 border-t border-slate-100 mt-4">
+          <div className="flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800 mt-6">
             <button type="button" onClick={() => setAddModal(false)} className="btn-secondary">Cancel</button>
-            <button type="submit" disabled={addSaving} className="btn-primary">{addSaving ? 'Registering...' : 'Register Technician'}</button>
+            <button type="submit" disabled={addSaving} className="btn-primary-premium">{addSaving ? 'Registering...' : 'Register Technician'}</button>
           </div>
         </form>
       </Modal>

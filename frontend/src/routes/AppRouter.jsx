@@ -35,7 +35,7 @@ export default function AppRouter() {
       <Route path="/submit-request" element={<CreateRequest />} />
 
       {/* Protected routes inside Dashboard layout */}
-      <Route path="/" element={
+      <Route element={
         <ProtectedRoute>
           <DashboardLayout />
         </ProtectedRoute>

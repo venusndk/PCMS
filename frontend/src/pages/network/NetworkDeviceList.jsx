@@ -5,12 +5,19 @@ import { technicianService } from '../../api/technicianService';
 import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import { useForm } from 'react-hook-form';
-import { Plus, Pencil, Trash2, Network, RefreshCw, Filter } from 'lucide-react';
+import { Plus, Pencil, Trash2, Network, RefreshCw, Filter, Wifi, ShieldCheck, Cpu } from 'lucide-react';
 
-const statusBadge = (s) => {
-  const map = { Working: 'badge-green', 'Not Working': 'badge-red', Damaged: 'badge-amber', Old: 'badge-slate' };
-  return <span className={`badge ${map[s] || 'badge-slate'}`}>{s}</span>;
+const getIcon = (type) => {
+  const t = type?.toLowerCase();
+  if (t === 'access point' || t === 'wifi') return <Wifi size={16} />;
+  if (t === 'switch' || t === 'hub') return <Network size={16} />;
+  if (t === 'router' || t === 'modem') return <Network size={16} />;
+  if (t === 'firewall') return <ShieldCheck size={16} />;
+  return <Cpu size={16} />;
 };
+
+import StatusBadge from '../../components/dashboard/StatusBadge';
+import { motion } from 'framer-motion';
 
 const TYPES    = ['Access Point', 'Switch', 'Router', 'Modem', 'Firewall', 'Other'];
 const STATUSES = ['Working', 'Not Working', 'Damaged', 'Old'];
@@ -33,7 +40,9 @@ export default function NetworkDeviceList() {
   }, [filter]);
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => { technicianService.list().then(r => setTechs(r.data)); }, []);
+  useEffect(() => { 
+    technicianService.list().then(r => setTechs(r.data.results || r.data)); 
+  }, []);
 
   const openAdd    = () => { reset({}); setModal('add'); setError(''); };
   const openEdit   = (d) => { setSelected(d); reset(d); setModal('edit'); setError(''); };
@@ -68,12 +77,12 @@ export default function NetworkDeviceList() {
 
       <div className="card p-4 flex flex-wrap gap-3 items-center">
         <Filter className="w-4 h-4 text-slate-400" />
-        <select className="input w-40 py-1.5 text-xs" value={filter.name}
+        <select className="input-premium w-40 py-1.5 text-xs h-9" value={filter.name}
           onChange={e => setFilter(f => ({ ...f, name: e.target.value }))}>
           <option value="">All Types</option>
           {TYPES.map(t => <option key={t}>{t}</option>)}
         </select>
-        <select className="input w-36 py-1.5 text-xs" value={filter.status}
+        <select className="input-premium w-36 py-1.5 text-xs h-9" value={filter.status}
           onChange={e => setFilter(f => ({ ...f, status: e.target.value }))}>
           <option value="">All Status</option>
           {STATUSES.map(s => <option key={s}>{s}</option>)}
@@ -107,26 +116,66 @@ export default function NetworkDeviceList() {
                 </tr>
               </thead>
               <tbody>
-                {items.map(d => (
-                  <tr key={d.id} className="table-row">
-                    <td className="table-td font-mono text-xs text-slate-400">#{d.id}</td>
-                    <td className="table-td font-semibold">{d.name}</td>
-                    <td className="table-td">{d.brand}</td>
-                    <td className="table-td font-mono text-xs text-slate-500">{d.ip_address || '—'}</td>
-                    <td className="table-td text-xs">{d.location}</td>
-                    <td className="table-td">{statusBadge(d.status)}</td>
-                    <td className="table-td text-xs text-slate-500">
-                      {d.technician_assigned ? `${d.technician_assigned.first_name} ${d.technician_assigned.last_name}` : <span className="text-slate-300">Unassigned</span>}
+                {items.map((d, idx) => (
+                  <motion.tr 
+                    key={d.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="table-row group"
+                  >
+                    <td className="px-6 py-4 font-mono text-[10px] font-bold text-slate-400">#{d.id}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-slate-100 dark:bg-surface-800 rounded-lg flex items-center justify-center group-hover:bg-primary-50 dark:group-hover:bg-primary-900/20 transition-colors">
+                          <span className="text-slate-500 group-hover:text-primary-600 transition-colors">
+                            {getIcon(d.device_type)}
+                          </span>
+                        </div>
+                        <span className="font-bold text-slate-800 dark:text-slate-200 text-sm italic">{d.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-widest">{d.brand}</td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold rounded-md font-mono tracking-tighter border border-slate-200 dark:border-surface-700">
+                        {d.ip_address || '—'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-[10px] font-bold rounded-md border border-primary-100 dark:border-primary-800/50 uppercase tracking-tighter">
+                        {d.location}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={d.status} />
+                    </td>
+                    <td className="px-6 py-4">
+                      {d.technician_assigned ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-[10px] font-bold text-primary-600">
+                            {d.technician_assigned.first_name?.[0] || 'T'}
+                          </div>
+                          <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                            {d.technician_assigned.first_name} {d.technician_assigned.last_name}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Unassigned</span>
+                      )}
                     </td>
                     {isAdmin && (
-                      <td className="table-td">
-                        <div className="flex gap-1">
-                          <button onClick={() => openEdit(d)} className="btn-ghost btn-sm p-1.5 text-blue-500 hover:bg-blue-50"><Pencil className="w-3.5 h-3.5" /></button>
-                          <button onClick={() => openDelete(d)} className="btn-ghost btn-sm p-1.5 text-red-500 hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" /></button>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-1.5 leading-none">
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openEdit(d)} className="p-2 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                            <Pencil className="w-4 h-4" />
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openDelete(d)} className="p-2 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all">
+                            <Trash2 className="w-4 h-4" />
+                          </motion.button>
                         </div>
                       </td>
                     )}
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
@@ -140,39 +189,39 @@ export default function NetworkDeviceList() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="label">Device Type *</label>
-            <select className="input" {...register('name', { required: true })}>
+            <select className="input-premium" {...register('name', { required: true })}>
               {TYPES.map(t => <option key={t}>{t}</option>)}
             </select>
           </div>
           <div>
             <label className="label">Brand *</label>
-            <input className={`input ${errors.brand ? 'input-error' : ''}`} placeholder="Cisco, TP-Link..." {...register('brand', { required: 'Brand required' })} />
-            {errors.brand && <p className="error-msg">{errors.brand.message}</p>}
+            <input className={`input-premium ${errors.brand ? 'border-rose-500' : ''}`} placeholder="Cisco, TP-Link..." {...register('brand', { required: 'Brand required' })} />
+            {errors.brand && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.brand.message}</p>}
           </div>
           <div>
             <label className="label">IP Address</label>
-            <input className="input" placeholder="192.168.1.1" {...register('ip_address')} />
+            <input className="input-premium" placeholder="192.168.1.1" {...register('ip_address')} />
           </div>
           <div>
             <label className="label">Location *</label>
-            <input className="input" placeholder="Server Room, Lab..." {...register('location', { required: true })} />
+            <input className="input-premium" placeholder="Server Room, Lab..." {...register('location', { required: true })} />
           </div>
           <div>
             <label className="label">Status *</label>
-            <select className="input" {...register('status', { required: true })}>
+            <select className="input-premium" {...register('status', { required: true })}>
               {STATUSES.map(s => <option key={s}>{s}</option>)}
             </select>
           </div>
           <div>
             <label className="label">Assign Technician</label>
-            <select className="input" {...register('technician_assigned')}>
+            <select className="input-premium" {...register('technician_assigned')}>
               <option value="">None</option>
-              {techs.map(t => <option key={t.id} value={t.id}>{t.first_name} {t.last_name}</option>)}
+              {Array.isArray(techs) && techs.map(t => <option key={t.id} value={t.id}>{t.first_name} {t.last_name}</option>)}
             </select>
           </div>
-          <div className="flex gap-3 justify-end pt-2 border-t border-slate-100">
+          <div className="flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800">
             <button type="button" onClick={close} className="btn-secondary">Cancel</button>
-            <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Saving...' : 'Save'}</button>
+            <button type="submit" disabled={saving} className="btn-primary-premium">{saving ? 'Saving...' : 'Save'}</button>
           </div>
         </form>
       </Modal>

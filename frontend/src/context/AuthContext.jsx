@@ -30,6 +30,7 @@ export function AuthProvider({ children }) {
     tokenManager.setTokens(data.tokens.access, data.tokens.refresh);
     tokenManager.setUser(data.user);
     setUser(data.user);
+    setLoading(false);
     return data.user;
   }, []);
 
@@ -38,6 +39,7 @@ export function AuthProvider({ children }) {
     tokenManager.setTokens(data.tokens.access, data.tokens.refresh);
     tokenManager.setUser(data.user);
     setUser(data.user);
+    setLoading(false);
     return data.user;
   }, []);
 

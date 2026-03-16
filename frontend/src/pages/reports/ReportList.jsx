@@ -6,11 +6,7 @@ import Modal from '../../components/Modal';
 import { useForm } from 'react-hook-form';
 import { Plus, FileText, Trash2, Eye, RefreshCw } from 'lucide-react';
 
-const statusBadge = (s) => {
-  const map = { Working: 'badge-green', 'Not Working': 'badge-red', Damaged: 'badge-amber', Old: 'badge-slate', Repaired: 'badge-blue', Replaced: 'badge-purple' };
-  return <span className={`badge ${map[s] || 'badge-slate'}`}>{s}</span>;
-};
-
+// StatusBadge component is imported below
 const DEVICE_TYPES = ['PC', 'Accessory', 'NetworkDevice'];
 const STATUSES = ['Working', 'Not Working', 'Damaged', 'Old', 'Repaired', 'Replaced'];
 
@@ -58,7 +54,7 @@ export default function ReportList() {
           <h2 className="page-title">Maintenance Reports</h2>
           <p className="page-subtitle">{items.length} reports found</p>
         </div>
-        <button onClick={openAdd} className="btn-primary"><Plus className="w-4 h-4" /> Create Report</button>
+        <button onClick={openAdd} className="btn-primary-premium px-6 py-2.5 shadow-lg shadow-primary-500/20"><Plus className="w-4 h-4" /> Create Report</button>
       </div>
 
       <div className="table-container">
@@ -93,16 +89,22 @@ export default function ReportList() {
                     <td className="table-td font-mono text-xs text-slate-400">#{r.id}</td>
                     <td className="table-td"><span className="badge badge-blue">{r.device_type}</span></td>
                     <td className="table-td font-mono text-xs">#{r.device_id}</td>
-                    <td className="table-td">{statusBadge(r.status)}</td>
+                    <td className="table-td"><StatusBadge status={r.status} /></td>
                     <td className="table-td text-xs text-slate-600">
                       {r.technician ? `${r.technician.first_name} ${r.technician.last_name}` : '—'}
                     </td>
                     <td className="table-td text-xs text-slate-500">{r.location}</td>
                     <td className="table-td text-xs text-slate-500">{r.report_date}</td>
-                    <td className="table-td">
-                      <div className="flex gap-1">
-                        <button onClick={() => openView(r)} className="btn-ghost btn-sm p-1.5 text-slate-500 hover:bg-slate-100"><Eye className="w-3.5 h-3.5" /></button>
-                        {isAdmin && <button onClick={() => openDelete(r)} className="btn-ghost btn-sm p-1.5 text-red-500 hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" /></button>}
+                    <td className="px-6 py-4">
+                      <div className="flex gap-1.5">
+                        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openView(r)} className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all font-bold" title="View details">
+                          <Eye className="w-4 h-4" />
+                        </motion.button>
+                        {isAdmin && (
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openDelete(r)} className="p-2 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all font-bold" title="Delete">
+                            <Trash2 className="w-4 h-4" />
+                          </motion.button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -119,36 +121,36 @@ export default function ReportList() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="label">Device Type *</label>
-            <select className="input" {...register('device_type', { required: true })}>
+            <select className="input-premium" {...register('device_type', { required: true })}>
               {DEVICE_TYPES.map(t => <option key={t}>{t}</option>)}
             </select>
           </div>
           <div>
             <label className="label">Device ID *</label>
-            <input type="number" className={`input ${errors.device_id ? 'input-error' : ''}`} placeholder="Enter the device ID number"
+            <input type="number" className={`input-premium ${errors.device_id ? 'border-rose-500' : ''}`} placeholder="Enter the device ID number"
               {...register('device_id', { required: 'Device ID is required' })} />
-            {errors.device_id && <p className="error-msg">{errors.device_id.message}</p>}
+            {errors.device_id && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.device_id.message}</p>}
           </div>
           <div>
             <label className="label">Status After Maintenance *</label>
-            <select className="input" {...register('status', { required: true })}>
+            <select className="input-premium" {...register('status', { required: true })}>
               {STATUSES.map(s => <option key={s}>{s}</option>)}
             </select>
           </div>
           <div>
             <label className="label">Location *</label>
-            <input className="input" placeholder="Lab 3, Office A..." {...register('location', { required: true })} />
+            <input className="input-premium" placeholder="Lab 3, Office A..." {...register('location', { required: true })} />
           </div>
           <div>
             <label className="label">Description *</label>
-            <textarea rows={3} className={`input resize-none ${errors.description ? 'input-error' : ''}`}
+            <textarea rows={3} className={`input-premium resize-none py-3 ${errors.description ? 'border-rose-500' : ''}`}
               placeholder="Describe what was done, what was found, and what was fixed..."
               {...register('description', { required: 'Description required' })} />
-            {errors.description && <p className="error-msg">{errors.description.message}</p>}
+            {errors.description && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.description.message}</p>}
           </div>
-          <div className="flex gap-3 justify-end pt-2 border-t border-slate-100">
+          <div className="flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800">
             <button type="button" onClick={close} className="btn-secondary">Cancel</button>
-            <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Saving...' : 'Create Report'}</button>
+            <button type="submit" disabled={saving} className="btn-primary-premium">{saving ? 'Saving...' : 'Create Report'}</button>
           </div>
         </form>
       </Modal>
@@ -169,13 +171,13 @@ export default function ReportList() {
                 <span className="text-sm text-slate-800">{val}</span>
               </div>
             ))}
-            <div className="flex justify-between py-2 border-b border-slate-100">
+            <div className="flex justify-between py-2 border-b border-slate-100 dark:border-surface-800">
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Status</span>
-              {statusBadge(selected.status)}
+              <StatusBadge status={selected.status} />
             </div>
-            <div className="bg-slate-50 rounded-lg p-3 mt-2">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Description</p>
-              <p className="text-sm text-slate-700">{selected.description}</p>
+            <div className="bg-slate-50 dark:bg-surface-800/50 rounded-xl p-4 border border-slate-100 dark:border-surface-800/50 mt-2">
+              <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">Detailed Description</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{selected.description}</p>
             </div>
           </div>
         )}

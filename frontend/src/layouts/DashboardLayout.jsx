@@ -22,7 +22,7 @@ export default function DashboardLayout() {
   const title = Object.entries(titles).find(([k]) => pathname.startsWith(k))?.[1] || 'PCM System';
 
   return (
-    <div className="flex h-screen overflow-hidden bg-surface-50">
+    <div className="flex h-screen overflow-hidden bg-surface-50 dark:bg-surface-950 transition-colors duration-300">
       {/* Desktop sidebar */}
       <div className="hidden lg:flex shrink-0">
         <Sidebar />

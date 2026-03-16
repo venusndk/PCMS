@@ -31,8 +31,8 @@ export default function CreateRequest() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-blue-50/20 to-surface-100 flex items-center justify-center p-4">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100 rounded-full opacity-30 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary-100 rounded-full opacity-30 blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary-200/20 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-[100px] animate-pulse-slow" />
       </div>
 
       <div className="relative w-full max-w-2xl animate-slide-up">
@@ -61,7 +61,10 @@ export default function CreateRequest() {
             </div>
           </div>
         ) : (
-          <div className="card p-8">
+          <div className="card p-8 border-t-4 border-t-emerald-500 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-[0.05]">
+              <CheckCircle size={120} />
+            </div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display text-xl font-bold text-slate-800">Your Information</h2>
               <Link to="/login" className="flex items-center gap-1 text-xs text-slate-400 hover:text-primary-600 transition-colors">
@@ -81,61 +84,61 @@ export default function CreateRequest() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="label">First Name *</label>
-                  <input className={`input ${errors.first_name ? 'input-error' : ''}`} placeholder="Alice"
+                  <input className={`input-premium ${errors.first_name ? 'border-rose-500 shadow-rose-100' : ''}`} placeholder="Alice"
                     {...register('first_name', { required: 'Required' })} />
-                  {errors.first_name && <p className="error-msg">{errors.first_name.message}</p>}
+                  {errors.first_name && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.first_name.message}</p>}
                 </div>
                 <div>
                   <label className="label">Last Name *</label>
-                  <input className={`input ${errors.last_name ? 'input-error' : ''}`} placeholder="Johnson"
+                  <input className={`input-premium ${errors.last_name ? 'border-rose-500 shadow-rose-100' : ''}`} placeholder="Johnson"
                     {...register('last_name', { required: 'Required' })} />
-                  {errors.last_name && <p className="error-msg">{errors.last_name.message}</p>}
+                  {errors.last_name && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.last_name.message}</p>}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="label">Email *</label>
-                  <input type="email" className={`input ${errors.email ? 'input-error' : ''}`} placeholder="alice@company.com"
+                  <input type="email" className={`input-premium ${errors.email ? 'border-rose-500 shadow-rose-100' : ''}`} placeholder="alice@company.com"
                     {...register('email', { required: 'Email required' })} />
-                  {errors.email && <p className="error-msg">{errors.email.message}</p>}
+                  {errors.email && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.email.message}</p>}
                 </div>
                 <div>
                   <label className="label">Telephone *</label>
-                  <input className={`input ${errors.telephone ? 'input-error' : ''}`} placeholder="+1234567890"
+                  <input className={`input-premium ${errors.telephone ? 'border-rose-500 shadow-rose-100' : ''}`} placeholder="+1234567890"
                     {...register('telephone', { required: 'Phone required' })} />
-                  {errors.telephone && <p className="error-msg">{errors.telephone.message}</p>}
+                  {errors.telephone && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.telephone.message}</p>}
                 </div>
               </div>
 
               <div>
                 <label className="label">Department / Unit *</label>
-                <input className={`input ${errors.unit ? 'input-error' : ''}`} placeholder="Finance Department, IT Office..."
+                <input className={`input-premium ${errors.unit ? 'border-rose-500 shadow-rose-100' : ''}`} placeholder="Finance Department, IT Office..."
                   {...register('unit', { required: 'Unit/Department required' })} />
-                {errors.unit && <p className="error-msg">{errors.unit.message}</p>}
+                {errors.unit && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.unit.message}</p>}
               </div>
 
               <div className="border-t border-slate-100 pt-4">
                 <h3 className="font-display text-sm font-bold text-slate-700 mb-3">Request Details</h3>
                 <div>
                   <label className="label">Request Type *</label>
-                  <select className="input" {...register('request_type', { required: true })}>
+                  <select className="input-premium" {...register('request_type', { required: true })}>
                     <option value="">Select request type...</option>
                     {REQUEST_TYPES.map(t => <option key={t}>{t}</option>)}
                   </select>
-                  {errors.request_type && <p className="error-msg">Please select a request type</p>}
+                  {errors.request_type && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">Please select a request type</p>}
                 </div>
               </div>
 
               <div>
                 <label className="label">Description *</label>
-                <textarea rows={4} className={`input resize-none ${errors.description ? 'input-error' : ''}`}
+                <textarea rows={4} className={`input-premium resize-none py-3 ${errors.description ? 'border-rose-500 shadow-rose-100' : ''}`}
                   placeholder="Describe your issue in detail. What happened? When did it start? What have you tried so far?"
                   {...register('description', { required: 'Please describe the issue', minLength: { value: 20, message: 'Please provide more detail (min. 20 characters)' } })} />
-                {errors.description && <p className="error-msg">{errors.description.message}</p>}
+                {errors.description && <p className="text-[10px] font-bold text-rose-500 mt-1 uppercase tracking-tight">{errors.description.message}</p>}
               </div>
 
-              <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-3">
+              <button type="submit" disabled={loading} className="btn-primary-premium w-full justify-center py-4 text-sm font-black uppercase tracking-widest shadow-xl shadow-primary-500/30">
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

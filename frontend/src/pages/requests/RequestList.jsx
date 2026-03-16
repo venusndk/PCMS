@@ -5,19 +5,23 @@ import { technicianService } from '../../api/technicianService';
 import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import { useForm } from 'react-hook-form';
-import { ClipboardList, Eye, UserPlus, CheckCircle, Trash2, Filter, RefreshCw } from 'lucide-react';
+import { ClipboardList, Eye, UserPlus, CheckCircle, Trash2, Filter, RefreshCw, Clock } from 'lucide-react';
 
-const statusBadge = (s) => {
-  const map = {
-    'Pending': 'badge-amber',
-    'Technician Assigned': 'badge-blue',
-    'Fixed': 'badge-green',
-    'Not Fixed': 'badge-red',
-  };
-  return <span className={`badge ${map[s] || 'badge-slate'}`}>{s}</span>;
+import StatusBadge from '../../components/dashboard/StatusBadge';
+import { motion } from 'framer-motion';
+
+const isOld = (dateStr) => {
+  if (!dateStr) return false;
+  try {
+    const d = new Date(dateStr);
+    const now = new Date();
+    return (now - d) > (2 * 24 * 60 * 60 * 1000);
+  } catch (e) { return false; }
 };
 
 const STATUSES = ['Pending', 'Technician Assigned', 'Fixed', 'Not Fixed'];
+
+const statusBadge = (s) => <StatusBadge status={s} />;
 
 export default function RequestList() {
   const { isAdmin, isTechnician } = useAuth();
@@ -37,7 +41,9 @@ export default function RequestList() {
   }, [filter]);
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => { if (isAdmin) technicianService.list().then(r => setTechs(r.data)); }, [isAdmin]);
+  useEffect(() => { 
+    if (isAdmin) technicianService.list().then(r => setTechs(r.data.results || r.data)); 
+  }, [isAdmin]);
 
   const openView   = (r) => { setSelected(r); setModal('view'); };
   const openAssign = (r) => { setSelected(r); reset({}); setModal('assign'); setError(''); };
@@ -81,7 +87,7 @@ export default function RequestList() {
       {/* Filters */}
       <div className="card p-4 flex flex-wrap gap-3 items-center">
         <Filter className="w-4 h-4 text-slate-400" />
-        <select className="input w-48 py-1.5 text-xs" value={filter.status}
+        <select className="input-premium w-48 py-1.5 text-xs h-9" value={filter.status}
           onChange={e => setFilter(f => ({ ...f, status: e.target.value }))}>
           <option value="">All Statuses</option>
           {STATUSES.map(s => <option key={s}>{s}</option>)}
@@ -116,45 +122,78 @@ export default function RequestList() {
                 </tr>
               </thead>
               <tbody>
-                {items.map(r => (
-                  <tr key={r.id} className="table-row">
-                    <td className="table-td font-mono text-xs text-slate-400">#{r.id}</td>
-                    <td className="table-td">
-                      <div>
-                        <p className="font-semibold text-slate-800 text-xs">{r.first_name} {r.last_name}</p>
-                        <p className="text-xs text-slate-400">{r.email}</p>
+                {items.map((r, idx) => (
+                  <motion.tr 
+                    key={r.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className={`table-row group ${isOld(r.date) && r.status === 'Pending' ? 'bg-rose-50/20 dark:bg-rose-900/5' : ''}`}
+                  >
+                    <td className="px-6 py-4 font-mono text-[10px] font-bold text-slate-400">#{r.id}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <p className="font-bold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2">
+                          {r.first_name} {r.last_name}
+                          {isOld(r.date) && r.status === 'Pending' && (
+                            <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" title="Old Request" />
+                          )}
+                        </p>
+                        <p className="text-[11px] font-medium text-slate-400 group-hover:text-primary-500 transition-colors uppercase tracking-tight">{r.email}</p>
                       </div>
                     </td>
-                    <td className="table-td text-xs text-slate-600">{r.unit}</td>
-                    <td className="table-td text-xs font-medium">{r.request_type}</td>
-                    <td className="table-td text-xs text-slate-500">{r.date}</td>
-                    <td className="table-td">{statusBadge(r.status)}</td>
-                    <td className="table-td text-xs text-slate-500">
-                      {r.assigned_technician ? `${r.assigned_technician.first_name} ${r.assigned_technician.last_name}` : <span className="text-slate-300">Unassigned</span>}
+                    <td className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-tight">{r.unit}</td>
+                    <td className="px-6 py-4">
+                      <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-widest px-2 py-1 bg-slate-100 dark:bg-surface-800 rounded-md ring-1 ring-slate-200 dark:ring-surface-700">
+                        {r.request_type}
+                      </span>
                     </td>
-                    <td className="table-td">
-                      <div className="flex gap-1">
-                        <button onClick={() => openView(r)} className="btn-ghost btn-sm p-1.5 text-slate-500 hover:bg-slate-100" title="View details">
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                        <Clock size={12} className={isOld(r.date) ? 'text-rose-500' : ''} />
+                        {r.date}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={r.status} />
+                    </td>
+                    <td className="px-6 py-4">
+                      {r.assigned_technician ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-[10px] font-bold text-primary-600">
+                            {r.assigned_technician.first_name[0]}
+                          </div>
+                          <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                            {r.assigned_technician.first_name}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Unassigned</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-1.5">
+                        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openView(r)} className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all font-bold" title="View details">
+                          <Eye className="w-4 h-4" />
+                        </motion.button>
                         {isAdmin && r.status === 'Pending' && (
-                          <button onClick={() => openAssign(r)} className="btn-ghost btn-sm p-1.5 text-blue-500 hover:bg-blue-50" title="Assign technician">
-                            <UserPlus className="w-3.5 h-3.5" />
-                          </button>
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openAssign(r)} className="p-2 rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all font-bold" title="Assign technician">
+                            <UserPlus className="w-4 h-4" />
+                          </motion.button>
                         )}
                         {(isAdmin || isTechnician) && r.status === 'Technician Assigned' && (
-                          <button onClick={() => openStatus(r)} className="btn-ghost btn-sm p-1.5 text-emerald-500 hover:bg-emerald-50" title="Update status">
-                            <CheckCircle className="w-3.5 h-3.5" />
-                          </button>
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openStatus(r)} className="p-2 rounded-lg text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all font-bold" title="Update status">
+                            <CheckCircle className="w-4 h-4" />
+                          </motion.button>
                         )}
                         {isAdmin && (
-                          <button onClick={() => openDelete(r)} className="btn-ghost btn-sm p-1.5 text-red-500 hover:bg-red-50" title="Delete">
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openDelete(r)} className="p-2 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all font-bold" title="Delete">
+                            <Trash2 className="w-4 h-4" />
+                          </motion.button>
                         )}
                       </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
@@ -176,15 +215,15 @@ export default function RequestList() {
                 ['Date', selected.date],
                 ['Status', ''],
               ].map(([label, val]) => (
-                <div key={label} className="bg-slate-50 rounded-lg p-3">
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">{label}</p>
-                  {label === 'Status' ? statusBadge(selected.status) : <p className="text-sm text-slate-800">{val || '—'}</p>}
+                <div key={label} className="bg-slate-50 dark:bg-surface-800/50 rounded-xl p-4 border border-slate-100 dark:border-surface-800/50">
+                  <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-1.5">{label}</p>
+                  {label === 'Status' ? statusBadge(selected.status) : <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{val || '—'}</p>}
                 </div>
               ))}
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Description</p>
-              <p className="text-sm text-slate-700">{selected.description}</p>
+            <div className="bg-slate-50 dark:bg-surface-800/50 rounded-xl p-4 border border-slate-100 dark:border-surface-800/50">
+              <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">Description</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{selected.description}</p>
             </div>
             {selected.assigned_technician && (
               <div className="bg-primary-50 border border-primary-100 rounded-lg p-3">
@@ -202,12 +241,12 @@ export default function RequestList() {
         <form onSubmit={handleSubmit(handleAssign)} className="space-y-4">
           <div>
             <label className="label">Select Technician *</label>
-            <select className="input" {...register('technician_id', { required: true })}>
+            <select className="input-premium" {...register('technician_id', { required: true })}>
               <option value="">Choose technician...</option>
-              {techs.filter(t => t.status === 'Available').map(t => (
+              {Array.isArray(techs) && techs.filter(t => t.status === 'Available').map(t => (
                 <option key={t.id} value={t.id}>{t.first_name} {t.last_name} ({t.status})</option>
               ))}
-              {techs.filter(t => t.status !== 'Available').length > 0 && (
+              {Array.isArray(techs) && techs.filter(t => t.status !== 'Available').length > 0 && (
                 <optgroup label="Other technicians">
                   {techs.filter(t => t.status !== 'Available').map(t => (
                     <option key={t.id} value={t.id}>{t.first_name} {t.last_name} ({t.status})</option>
@@ -216,9 +255,9 @@ export default function RequestList() {
               )}
             </select>
           </div>
-          <div className="flex gap-3 justify-end pt-2 border-t border-slate-100">
+          <div className="flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800">
             <button type="button" onClick={close} className="btn-secondary">Cancel</button>
-            <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Assigning...' : 'Assign'}</button>
+            <button type="submit" disabled={saving} className="btn-primary-premium">{saving ? 'Assigning...' : 'Assign'}</button>
           </div>
         </form>
       </Modal>
@@ -229,14 +268,14 @@ export default function RequestList() {
         <form onSubmit={handleSubmit(handleStatus)} className="space-y-4">
           <div>
             <label className="label">New Status *</label>
-            <select className="input" {...register('status', { required: true })}>
+            <select className="input-premium" {...register('status', { required: true })}>
               <option value="Fixed">✅ Fixed</option>
               <option value="Not Fixed">❌ Not Fixed</option>
             </select>
           </div>
-          <div className="flex gap-3 justify-end pt-2 border-t border-slate-100">
+          <div className="flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800">
             <button type="button" onClick={close} className="btn-secondary">Cancel</button>
-            <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Updating...' : 'Update Status'}</button>
+            <button type="submit" disabled={saving} className="btn-primary-premium">{saving ? 'Updating...' : 'Update Status'}</button>
           </div>
         </form>
       </Modal>

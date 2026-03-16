@@ -18,10 +18,14 @@ export default function Login() {
     setLoading(true); setError('');
     try {
       const user = await login(data.email, data.password);
-      navigate('/dashboard');
+      // Redirection logic should be snappy now as AuthContext loading is cleared
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err.response?.data?.non_field_errors?.[0] || err.response?.data?.detail || 'Invalid email or password.');
-    } finally { setLoading(false); }
+      setLoading(false); 
+    }
+    // We don't necessarily need finally { setLoading(false) } here if navigation succeeds,
+    // but the catch block definitely needs it if it wasn't there (it was, but let's be explicit).
   };
 
   return (
@@ -56,16 +60,15 @@ export default function Login() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
               <label className="label">Email Address</label>
               <input
                 type="email"
-                className={`input ${errors.email ? 'input-error' : ''}`}
+                className="input-premium"
                 placeholder="admin@pcm.com"
-                {...register('email', { required: 'Email is required' })}
+                {...register('email', { required: true })}
               />
-              {errors.email && <p className="error-msg">{errors.email.message}</p>}
             </div>
 
             <div>
@@ -73,9 +76,9 @@ export default function Login() {
               <div className="relative">
                 <input
                   type={showPass ? 'text' : 'password'}
-                  className={`input pr-10 ${errors.password ? 'input-error' : ''}`}
+                  className="input-premium pr-10"
                   placeholder="••••••••"
-                  {...register('password', { required: 'Password is required' })}
+                  {...register('password', { required: true })}
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">

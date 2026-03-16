@@ -8,6 +8,8 @@ import {
   Users, Cpu, Wrench, Check, ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 /* ─────────────────────────── helpers ─────────────────────── */
 function useCountUp(target, isInView, duration = 1500) {
@@ -81,13 +83,13 @@ function FeatureCard({ icon: Icon, title, desc, index }) {
       whileInView="visible"
       viewport={{ once: true }}
       whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(0,0,0,0.10)' }}
-      className="bg-white border border-slate-100 rounded-2xl p-6 cursor-default transition-shadow"
+      className="bg-white dark:bg-surface-900 border border-slate-100 dark:border-surface-800 rounded-2xl p-6 cursor-default transition-shadow"
     >
       <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4 ${iconColors[index]}`}>
         <Icon size={22} />
       </div>
-      <h3 className="text-slate-800 font-bold text-lg mb-2">{title}</h3>
-      <p className="text-slate-500 text-sm leading-relaxed">{desc}</p>
+      <h3 className="text-slate-800 dark:text-white font-bold text-lg mb-2">{title}</h3>
+      <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{desc}</p>
     </motion.div>
   );
 }
@@ -96,6 +98,7 @@ function FeatureCard({ icon: Icon, title, desc, index }) {
 export default function Landing() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -121,7 +124,9 @@ export default function Landing() {
       initial={{ opacity: 0, y: -24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'backdrop-blur-md bg-white/90 shadow-sm' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+        ? 'backdrop-blur-md bg-white/90 dark:bg-surface-950/90 shadow-sm border-b border-slate-100 dark:border-surface-800'
+        : 'bg-transparent'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -131,7 +136,7 @@ export default function Landing() {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <Shield size={18} className="text-white" />
             </div>
-            <span className={`font-bold text-lg ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
+            <span className={`font-bold text-lg ${isScrolled ? 'text-slate-900 dark:text-white' : 'text-white'}`}>
               PCM System
             </span>
           </Link>
@@ -145,9 +150,10 @@ export default function Landing() {
             >
               Submit ICT Request
             </button>
+            <ThemeToggle className={isScrolled ? "" : "text-white dark:text-white hover:bg-white/10 dark:hover:bg-white/10"} />
             <button
               onClick={handleLogin}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="btn-primary-premium text-sm px-6 py-2"
             >
               Login to System
             </button>
@@ -155,10 +161,11 @@ export default function Landing() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden text-white p-1"
             onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden p-1 flex items-center gap-2"
           >
-            {mobileOpen ? <X size={22} className={isScrolled ? 'text-slate-800' : 'text-white'} /> : <Menu size={22} className={isScrolled ? 'text-slate-800' : 'text-white'} />}
+            <ThemeToggle className={isScrolled ? "" : "text-white dark:text-white hover:bg-white/10 dark:hover:bg-white/10"} />
+            {mobileOpen ? <X size={22} className={isScrolled ? 'text-slate-800 dark:text-white' : 'text-white'} /> : <Menu size={22} className={isScrolled ? 'text-slate-800 dark:text-white' : 'text-white'} />}
           </button>
         </div>
       </div>
@@ -170,11 +177,11 @@ export default function Landing() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-slate-100 px-4 py-4 flex flex-col gap-3"
+            className="md:hidden bg-white dark:bg-surface-950 border-t border-slate-100 dark:border-surface-800 px-4 py-4 flex flex-col gap-3"
           >
             <button
               onClick={() => { navigate('/submit-request'); setMobileOpen(false); }}
-              className="text-slate-700 text-sm font-medium text-left"
+              className="text-slate-700 dark:text-slate-300 text-sm font-medium text-left"
             >
               Submit ICT Request
             </button>
@@ -215,18 +222,6 @@ export default function Landing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          {/* Badge 
-          <div className="inline-flex items-center gap-2 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-4 py-1.5 text-sm font-medium mb-6">
-            <Shield size={14} /> Trusted IT Management Platform
-          </div>
-
-          {/* Headline */}
-          {/*<h1 className="text-5xl sm:text-6xl font-extrabold text-white leading-tight mb-5">
-            Keep Your<br />Organization's<br />Technology Running{' '}
-            <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-              Smoothly
-            </span>
-          </h1>*/}
 
           {/* Subtitle */}
           <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-lg">
@@ -238,7 +233,7 @@ export default function Landing() {
           <div className="flex flex-wrap gap-4 mb-8">
             <button
               onClick={handleLogin}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-7 py-3.5 rounded-xl transition-colors shadow-lg shadow-indigo-500/30"
+              className="btn-primary-premium flex items-center gap-2 px-8 py-4 text-base"
             >
               Enter System <ChevronRight size={18} />
             </button>
@@ -389,7 +384,7 @@ export default function Landing() {
   ];
 
   const Features = (
-    <section className="bg-white py-24">
+    <section className="bg-white dark:bg-surface-950 py-24 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -398,10 +393,10 @@ export default function Landing() {
           viewport={{ once: true }}
           className="text-center mb-14"
         >
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
+          <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
             Everything You Need to Manage IT
           </h2>
-          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">
             One platform to track, assign, report, and resolve all your ICT needs.
           </p>
         </motion.div>
@@ -441,7 +436,7 @@ export default function Landing() {
   ];
 
   const HowItWorks = (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-50 dark:bg-surface-900 py-24 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -450,8 +445,8 @@ export default function Landing() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">How It Works</h2>
-          <p className="text-slate-500 text-lg">Three simple steps from request to resolution</p>
+          <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">How It Works</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-lg">Three simple steps from request to resolution</p>
         </motion.div>
 
         <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-10 md:gap-0">
@@ -470,11 +465,11 @@ export default function Landing() {
               <div className={`w-20 h-20 ${step.color} rounded-full flex items-center justify-center mb-5 shadow-lg`}>
                 <step.icon size={28} className="text-white" />
               </div>
-              <div className="bg-white text-xs font-bold text-slate-400 px-3 py-1 rounded-full border border-slate-200 mb-3">
+              <div className="bg-white dark:bg-surface-800 text-xs font-bold text-slate-400 px-3 py-1 rounded-full border border-slate-200 dark:border-surface-700 mb-3">
                 STEP {step.number}
               </div>
-              <h3 className="text-slate-900 font-bold text-xl mb-3">{step.title}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
+              <h3 className="text-slate-900 dark:text-white font-bold text-xl mb-3">{step.title}</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{step.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -502,7 +497,7 @@ export default function Landing() {
   ];
 
   const UserRoles = (
-    <section className="bg-white py-24">
+    <section className="bg-white dark:bg-surface-950 py-24 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -511,10 +506,10 @@ export default function Landing() {
           viewport={{ once: true }}
           className="text-center mb-14"
         >
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
+          <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
             Built for Your Entire IT Team
           </h2>
-          <p className="text-slate-500 text-lg">
+          <p className="text-slate-500 dark:text-slate-400 text-lg">
             Different roles, different access levels, same powerful platform
           </p>
         </motion.div>
@@ -556,14 +551,14 @@ export default function Landing() {
             viewport={{ once: true }}
             className="bg-white border-2 border-indigo-100 rounded-2xl p-8 shadow-xl"
           >
-            <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-5">
-              <Wrench size={26} className="text-indigo-600" />
+            <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-900/40 rounded-2xl flex items-center justify-center mb-5">
+              <Wrench size={26} className="text-indigo-600 dark:text-indigo-400" />
             </div>
-            <h3 className="text-2xl font-extrabold text-slate-800 mb-1">Technician</h3>
-            <p className="text-slate-500 text-sm mb-6">Field operations access</p>
+            <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-1">Technician</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Field operations access</p>
             <ul className="space-y-3 mb-8">
               {techFeatures.map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-slate-700">
+                <li key={f} className="flex items-center gap-2.5 text-sm text-slate-700 dark:text-slate-300">
                   <Check size={16} className="text-indigo-500 flex-shrink-0" /> {f}
                 </li>
               ))}
@@ -599,7 +594,7 @@ export default function Landing() {
         <div className="flex flex-wrap justify-center gap-4">
           <button
             onClick={handleLogin}
-            className="bg-white text-indigo-700 font-bold px-8 py-3.5 rounded-xl hover:bg-indigo-50 transition-colors"
+            className="btn-primary-premium bg-white text-indigo-700 hover:bg-indigo-50 font-bold px-10 py-4"
           >
             Enter System
           </button>
@@ -616,7 +611,7 @@ export default function Landing() {
 
   /* ═══════════ FOOTER ═══════════ */
   const Footer = (
-    <footer className="bg-slate-900 pt-16 pb-8">
+    <footer className="bg-slate-900 dark:bg-surface-950 pt-16 pb-8 border-t border-slate-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
           {/* Brand */}
@@ -667,8 +662,8 @@ export default function Landing() {
 
         {/* Bottom bar */}
         <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="text-slate-500 text-xs">© 2024 PCM System. All rights reserved.</p>
-          <p className="text-slate-500 text-xs">Built with React + Django REST Framework</p>
+          <p className="text-slate-500 text-xs">&copy; 2026 PCM System. All rights reserved.</p>
+          <p className="text-slate-500 text-xs">Built By: Venuste NDIKUMANA</p>
         </div>
       </div>
     </footer>

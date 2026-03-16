@@ -8,10 +8,8 @@ import FormInput from '../../components/FormInput';
 import { useForm } from 'react-hook-form';
 import { Plus, Pencil, Trash2, Filter, Monitor, RefreshCw } from 'lucide-react';
 
-const statusBadge = (s) => {
-  const map = { Working: 'badge-green', 'Not Working': 'badge-red', Damaged: 'badge-amber', Old: 'badge-slate' };
-  return <span className={`badge ${map[s] || 'badge-slate'}`}>{s}</span>;
-};
+import StatusBadge from '../../components/dashboard/StatusBadge';
+import { motion } from 'framer-motion';
 
 const STATUSES   = ['Working', 'Not Working', 'Damaged', 'Old'];
 const LOCATIONS  = ['Lab', 'Office'];
@@ -35,7 +33,9 @@ export default function PCList() {
   }, [filters]);
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => { technicianService.list().then(r => setTechs(r.data)); }, []);
+  useEffect(() => { 
+    technicianService.list().then(r => setTechs(r.data.results || r.data)); 
+  }, []);
 
   const openAdd = () => { reset({}); setModal('add'); setError(''); };
   const openEdit = (pc) => { setSelected(pc); reset(pc); setModal('edit'); setError(''); };
@@ -76,12 +76,12 @@ export default function PCList() {
       {/* Filters */}
       <div className="card p-4 flex flex-wrap gap-3 items-center">
         <Filter className="w-4 h-4 text-slate-400" />
-        <select className="input w-36 py-1.5 text-xs" value={filters.location}
+        <select className="input-premium w-36 py-1.5 text-xs h-9" value={filters.location}
           onChange={e => setFilters(f => ({ ...f, location: e.target.value }))}>
           <option value="">All Locations</option>
           {LOCATIONS.map(l => <option key={l}>{l}</option>)}
         </select>
-        <select className="input w-36 py-1.5 text-xs" value={filters.status}
+        <select className="input-premium w-36 py-1.5 text-xs h-9" value={filters.status}
           onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}>
           <option value="">All Status</option>
           {STATUSES.map(s => <option key={s}>{s}</option>)}
@@ -121,32 +121,64 @@ export default function PCList() {
                 </tr>
               </thead>
               <tbody>
-                {pcs.map(pc => (
-                  <tr key={pc.id} className="table-row">
-                    <td className="table-td font-mono text-xs text-slate-400">#{pc.id}</td>
-                    <td className="table-td font-semibold text-slate-800">{pc.brand}</td>
-                    <td className="table-td">{pc.ram}</td>
-                    <td className="table-td">{pc.hdd}</td>
-                    <td className="table-td text-xs">{pc.operating_system}</td>
-                    <td className="table-td"><span className="badge badge-blue">{pc.location}</span></td>
-                    <td className="table-td">{statusBadge(pc.status)}</td>
-                    <td className="table-td text-xs text-slate-500">
-                      {pc.technician_assigned ? pc.technician_assigned.full_name || `${pc.technician_assigned.first_name} ${pc.technician_assigned.last_name}` : <span className="text-slate-300">Unassigned</span>}
+                {pcs.map((pc, idx) => (
+                  <motion.tr 
+                    key={pc.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="table-row group"
+                  >
+                    <td className="px-6 py-4 font-mono text-[10px] font-bold text-slate-400">#{pc.id}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-slate-100 dark:bg-surface-800 rounded-lg flex items-center justify-center group-hover:bg-primary-50 dark:group-hover:bg-primary-900/20 transition-colors">
+                          <Monitor className="w-4 h-4 text-slate-500 group-hover:text-primary-600 transition-colors" />
+                        </div>
+                        <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">{pc.brand}</span>
+                      </div>
                     </td>
-                    <td className="table-td text-slate-500">{pc.registration_year}</td>
+                    <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-400 font-mono">{pc.ram}</td>
+                    <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-400 font-mono">{pc.hdd}</td>
+                    <td className="px-6 py-4">
+                      <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{pc.operating_system}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-[10px] font-bold rounded-md border border-primary-100 dark:border-primary-800/50 uppercase tracking-tighter">
+                        {pc.location}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={pc.status} />
+                    </td>
+                    <td className="px-6 py-4">
+                      {pc.technician_assigned ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-[10px] font-bold text-primary-600">
+                            {pc.technician_assigned.first_name?.[0] || 'T'}
+                          </div>
+                          <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                            {pc.technician_assigned.full_name || `${pc.technician_assigned.first_name} ${pc.technician_assigned.last_name}`}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Unassigned</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-xs font-bold text-slate-500">{pc.registration_year}</td>
                     {isAdmin && (
-                      <td className="table-td">
-                        <div className="flex gap-1">
-                          <button onClick={() => openEdit(pc)} className="btn-ghost btn-sm p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50">
-                            <Pencil className="w-3.5 h-3.5" />
-                          </button>
-                          <button onClick={() => openDelete(pc)} className="btn-ghost btn-sm p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50">
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-1.5 leading-none">
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openEdit(pc)} className="p-2 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                            <Pencil className="w-4 h-4" />
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openDelete(pc)} className="p-2 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all">
+                            <Trash2 className="w-4 h-4" />
+                          </motion.button>
                         </div>
                       </td>
                     )}
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
@@ -171,26 +203,26 @@ export default function PCList() {
             register={register('registration_year', { required: 'Year is required', valueAsNumber: true })} />
           <div>
             <label className="label">Location *</label>
-            <select className="input" {...register('location', { required: true })}>
+            <select className="input-premium" {...register('location', { required: true })}>
               {LOCATIONS.map(l => <option key={l}>{l}</option>)}
             </select>
           </div>
           <div>
             <label className="label">Status *</label>
-            <select className="input" {...register('status', { required: true })}>
+            <select className="input-premium" {...register('status', { required: true })}>
               {STATUSES.map(s => <option key={s}>{s}</option>)}
             </select>
           </div>
           <div>
             <label className="label">Assign Technician</label>
-            <select className="input" {...register('technician_assigned')}>
+            <select className="input-premium" {...register('technician_assigned')}>
               <option value="">None</option>
-              {techs.map(t => <option key={t.id} value={t.id}>{t.first_name} {t.last_name}</option>)}
+              {Array.isArray(techs) && techs.map(t => <option key={t.id} value={t.id}>{t.first_name} {t.last_name}</option>)}
             </select>
           </div>
-          <div className="col-span-2 flex gap-3 justify-end pt-2 border-t border-slate-100">
+          <div className="col-span-2 flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800">
             <button type="button" onClick={closeModal} className="btn-secondary">Cancel</button>
-            <button type="submit" disabled={saving} className="btn-primary">
+            <button type="submit" disabled={saving} className="btn-primary-premium">
               {saving ? 'Saving...' : modal === 'add' ? 'Register PC' : 'Save Changes'}
             </button>
           </div>
