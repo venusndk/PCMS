@@ -222,7 +222,7 @@ export default function Landing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-           
+
 
           {/* Subtitle */}
           <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-lg">
@@ -652,9 +652,9 @@ export default function Landing() {
 
           {/* System Info */}
           <div>
-            <h4 className="text-white font-bold mb-4">System</h4>
+            <h4 className="text-white font-bold mb-4">Contact</h4>
             <ul className="space-y-2">
-              {['Role-based Access Control', 'JWT Authentication', 'Real-time Dashboard', 'MySQL Database'].map((item) => (
+              {['Tel: +250799375874', 'Email: venustendikumana2003@gmail.com', 'Location: Kigali, Rwanda'].map((item) => (
                 <li key={item} className="text-slate-400 text-sm">{item}</li>
               ))}
             </ul>
