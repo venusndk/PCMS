@@ -642,3 +642,17 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,vs,windows
+
+# ── PCM System: Debug / scratch scripts (FIX #22) ────────────
+# These are one-off debugging files that should not be committed.
+check_db.py
+check_serialization.py
+debug_assignment.py
+diag.py
+parse_err.py
+test_api.py
+test_fetch.py
+test_list.py
+test_schema.py
+test_spectacular.py
+error.html

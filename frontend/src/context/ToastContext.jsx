@@ -13,24 +13,23 @@ export const useToast = () => {
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
-  const showToast = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    
-    // Auto remove after 4 seconds
-    setTimeout(() => {
-      removeToast(id);
-    }, 4000);
-  }, []);
-
+  // FIX #10: Declare removeToast first so showToast can safely reference it
+  // and add it to the dependency array without a stale closure issue.
   const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const showToast = useCallback((message, type = 'success') => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    // Auto remove after 4 seconds — removeToast is now a stable reference
+    setTimeout(() => removeToast(id), 4000);
+  }, [removeToast]); // FIX #10: removeToast is now correctly in the dependency array
+
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      
+
       {/* Toast Container */}
       <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none">
         <AnimatePresence>
@@ -42,9 +41,9 @@ export const ToastProvider = ({ children }) => {
               exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
               className="pointer-events-auto"
             >
-              <ToastItem 
-                toast={toast} 
-                onClose={() => removeToast(toast.id)} 
+              <ToastItem
+                toast={toast}
+                onClose={() => removeToast(toast.id)}
               />
             </motion.div>
           ))}
@@ -68,14 +67,15 @@ const ToastItem = ({ toast, onClose }) => {
   };
 
   return (
-    <div className={`px-4 py-3 rounded-[1.25rem] border shadow-2xl backdrop-blur-md flex items-center gap-3 min-w-[280px] group ${bgColors[toast.type]}`}>
+    <div className={`px-4 py-3 rounded-[1.25rem] border shadow-2xl backdrop-blur-md flex items-center gap-3 min-w-[280px] max-w-[400px] group ${bgColors[toast.type]}`}>
       <div className="shrink-0">{icons[toast.type]}</div>
-      <p className="text-sm font-bold text-slate-800 dark:text-slate-200 flex-1 truncate">
+      {/* FIX #18: Use line-clamp-2 instead of truncate so longer messages are readable */}
+      <p className="text-sm font-bold text-slate-800 dark:text-slate-200 flex-1 line-clamp-2">
         {toast.message}
       </p>
-      <button 
+      <button
         onClick={onClose}
-        className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-slate-400 dark:text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-slate-400 dark:text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
       >
         <X size={14} />
       </button>

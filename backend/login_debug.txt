@@ -1,0 +1,24 @@
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Venuste !!@1'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Venuste !!@1'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Venuste !!@1'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Venuste !!@1'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+

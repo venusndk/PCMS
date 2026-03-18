@@ -137,7 +137,7 @@ export default function Landing() {
               <Shield size={18} className="text-white" />
             </div>
             <span className={`font-bold text-lg ${isScrolled ? 'text-slate-900 dark:text-white' : 'text-white'}`}>
-              PCM System
+              PCMS
             </span>
           </Link>
 
@@ -183,13 +183,13 @@ export default function Landing() {
               onClick={() => { navigate('/submit-request'); setMobileOpen(false); }}
               className="text-slate-700 dark:text-slate-300 text-sm font-medium text-left"
             >
-              Submit ICT Request
+              Submit Request
             </button>
             <button
               onClick={() => { handleLogin(); setMobileOpen(false); }}
               className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg text-left"
             >
-              Login to System
+              Login
             </button>
           </motion.div>
         )}
@@ -227,7 +227,7 @@ export default function Landing() {
           {/* Subtitle */}
           <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-lg">
             Complete IT infrastructure management for computers, accessories, network devices,
-            and ICT support requests — all managed in one powerful platform.
+            and ICT support requests, all managed in one powerful platform.
           </p>
 
           {/* CTA buttons */}
@@ -242,7 +242,7 @@ export default function Landing() {
               onClick={() => navigate('/submit-request')}
               className="bg-transparent border border-white/40 hover:border-white/70 text-white font-medium px-7 py-3.5 rounded-xl transition-colors"
             >
-              Submit ICT Request
+              Submit Request
             </button>
           </div>
 

@@ -9,6 +9,7 @@ Think of serializers as a "translator" between Python objects and JSON.
 
 from rest_framework import serializers
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 from .models import User
 
 
@@ -17,9 +18,11 @@ from .models import User
 # ─────────────────────────────────────────────────────────────
 class RegisterSerializer(serializers.ModelSerializer):
     """
-    Used when creating a new user.
+    Used when creating a new user (Admin only).
     - 'password' is write_only: it will never be sent back in responses
     - 'confirm_password' is just for validation, not saved to DB
+    - 'role' is accepted so Admins can set Technician or Administrator
+    - Password is validated against Django's AUTH_PASSWORD_VALIDATORS
     """
     password         = serializers.CharField(write_only=True, min_length=6)
     confirm_password = serializers.CharField(write_only=True)
@@ -27,12 +30,14 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'password',
-                  'confirm_password', 'role', 'phone', 'status']
+                  'confirm_password', 'role', 'phone']
 
     def validate(self, data):
-        """Check that passwords match."""
+        """Check that passwords match and meet strength requirements."""
         if data['password'] != data['confirm_password']:
             raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
+        # Run Django's built-in password validators (min length, common passwords, etc.)
+        validate_password(data['password'])
         return data
 
     def create(self, validated_data):
@@ -43,6 +48,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(password)  # Hash the password before saving
         user.save()
         return user
+
 
 
 # ─────────────────────────────────────────────────────────────
@@ -58,7 +64,17 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         """Check that email and password are correct."""
-        user = authenticate(username=data['email'], password=data['password'])
+        email_clean = data['email'].strip()
+        
+        user = authenticate(username=email_clean, password=data['password'])
+        
+        with open('login_debug.txt', 'a', encoding='utf-8') as f:
+            f.write(f"--- LOGIN ATTEMPT ---\n")
+            f.write(f"RAW EMAIL:    {repr(data['email'])}\n")
+            f.write(f"CLEAN EMAIL:  {repr(email_clean)}\n")
+            f.write(f"RAW PASSWORD: {repr(data['password'])}\n")
+            f.write(f"AUTH RESULT:  {user}\n\n")
+            
         if not user:
             raise serializers.ValidationError("Invalid email or password.")
         if not user.is_active:

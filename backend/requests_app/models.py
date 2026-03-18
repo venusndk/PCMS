@@ -44,7 +44,8 @@ class Request(models.Model):
     # Request details
     request_type         = models.CharField(max_length=100, choices=REQUEST_TYPE_CHOICES)
     description          = models.TextField(help_text="Describe the issue in detail")
-    date                 = models.DateField(auto_now_add=True)
+    date                 = models.DateTimeField(auto_now_add=True)
+
 
     # Status tracking
     status               = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Pending')

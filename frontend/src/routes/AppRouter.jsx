@@ -32,8 +32,18 @@ export default function AppRouter() {
 
       {/* Public routes */}
       <Route path="/login"          element={<Login />} />
-      <Route path="/register"       element={<Register />} />
       <Route path="/submit-request" element={<CreateRequest />} />
+
+      {/*
+        FIX #13: /register is now admin-only.
+        Unauthenticated users → redirected to /login.
+        Authenticated non-admins → redirected to /dashboard.
+      */}
+      <Route path="/register" element={
+        <ProtectedRoute adminOnly>
+          <Register />
+        </ProtectedRoute>
+      } />
 
       {/* Protected routes inside Dashboard layout */}
       <Route element={

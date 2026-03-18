@@ -32,3 +32,15 @@ class UpdateRequestStatusSerializer(serializers.Serializer):
     """For updating request status (Technician)."""
     STATUS_CHOICES = [('Fixed', 'Fixed'), ('Not Fixed', 'Not Fixed')]
     status = serializers.ChoiceField(choices=STATUS_CHOICES)
+
+
+class RequestNotificationSerializer(serializers.ModelSerializer):
+    """
+    Lightweight serializer for the notifications dropdown.
+    Keep this small to make frequent polling cheap.
+    """
+
+    class Meta:
+        model = Request
+        fields = ['id', 'first_name', 'last_name', 'unit', 'request_type', 'date', 'status']
+        read_only_fields = fields

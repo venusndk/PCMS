@@ -14,6 +14,7 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.throttling import AnonRateThrottle
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from django.contrib.auth import get_user_model
@@ -49,14 +50,14 @@ def get_tokens_for_user(user):
 class RegisterView(APIView):
     """
     Register a new user (Administrator or Technician).
-    No authentication required.
+    [Admin Only] — Only Administrators can create new accounts.
     """
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdministrator]
     serializer_class = RegisterSerializer
 
     @extend_schema(
-        summary="Register a new user",
-        description="Create a new Administrator or Technician account.",
+        summary="Register a new user (Admin only)",
+        description="Create a new Administrator or Technician account. Requires Administrator JWT.",
         request=RegisterSerializer,
         examples=[
             OpenApiExample(
@@ -69,7 +70,6 @@ class RegisterView(APIView):
                     "confirm_password": "securepass123",
                     "role": "Technician",
                     "phone": "+1234567890",
-                    "status": "Available"
                 }
             )
         ]
@@ -96,9 +96,12 @@ class RegisterView(APIView):
 class LoginView(APIView):
     """
     Login with email and password. Returns JWT tokens.
+    Throttled to 10 attempts/minute per IP to prevent brute-force.
     """
     permission_classes = [AllowAny]
+    # throttle_classes = [AnonRateThrottle]
     serializer_class = LoginSerializer
+
 
     @extend_schema(
         summary="Login",

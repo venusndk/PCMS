@@ -7,4 +7,6 @@ export const requestService = {
   delete:         (id)     => api.delete(`/api/requests/${id}/`),
   assignTechnician:(id, d) => api.post(`/api/assign-technician/${id}/`, d),
   updateStatus:   (id, d)  => api.post(`/api/requests/${id}/update-status/`, d),
+  count:          (params) => api.get('/api/requests/count/', { params }),
+  notifications:  (params) => api.get('/api/requests/notifications/', { params }),
 };

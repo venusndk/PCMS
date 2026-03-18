@@ -1,5 +1,6 @@
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import NotificationButton from './NotificationButton';
 
 export default function Navbar({ onMenuClick, title }) {
   const { user } = useAuth();
@@ -19,10 +20,7 @@ export default function Navbar({ onMenuClick, title }) {
 
       {/* Right side actions */}
       <div className="flex items-center gap-2">
-        <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors relative">
-          <Bell className="w-[18px] h-[18px]" />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-primary-500 rounded-full ring-2 ring-white dark:ring-surface-950" />
-        </button>
+        <NotificationButton />
         <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-surface-950">
           <span className="text-[10px] font-bold text-primary-700 dark:text-primary-400">{initials}</span>
         </div>

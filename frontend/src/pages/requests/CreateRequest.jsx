@@ -23,6 +23,7 @@ export default function CreateRequest() {
       const res = await requestService.create(data);
       setSuccess(res.data);
       reset();
+      window.dispatchEvent(new Event('pcm:requests-changed'));
     } catch (e) {
       setError(e.response?.data?.detail || 'Failed to submit. Please try again.');
     } finally { setLoading(false); }

@@ -46,22 +46,24 @@ class PCListView(APIView):
         ]
     )
     def get(self, request):
-        queryset = PC.objects.all()
+        queryset = PC.objects.select_related('technician_assigned').all()
 
-        # Apply filters if provided in the URL (?location=Lab&status=Working)
         location = request.query_params.get('location')
         pc_status = request.query_params.get('status')
         technician = request.query_params.get('technician')
 
         if location:
-            queryset = queryset.filter(location=location)
+            queryset = queryset.filter(location__iexact=location)
         if pc_status:
-            queryset = queryset.filter(status=pc_status)
+            # FIX #20: Use __iexact for case-insensitive filter (consistent with location)
+            queryset = queryset.filter(status__iexact=pc_status)
         if technician:
             queryset = queryset.filter(technician_assigned_id=technician)
 
         serializer = PCSerializer(queryset, many=True)
-        return Response({'count': queryset.count(), 'results': serializer.data})
+        data = serializer.data
+        # FIX #9: use len() to avoid second DB query for count
+        return Response({'count': len(data), 'results': data})
 
     @extend_schema(
         summary="Register a new PC",
@@ -100,12 +102,21 @@ class PCDetailView(APIView):
     PUT    /api/pcs/{id}/ - Update a PC
     DELETE /api/pcs/{id}/ - Delete a PC (Admin only)
     """
-    permission_classes = [IsAdminOrTechnician]
     serializer_class = PCSerializer
+
+    def get_permissions(self):
+        """
+        FIX #4: Use proper permission classes per HTTP method.
+        DELETE is restricted to Administrators only via permission class,
+        not a manual runtime check.
+        """
+        if self.request.method == 'DELETE':
+            return [IsAdministrator()]
+        return [IsAdminOrTechnician()]
 
     def get_object(self, pk):
         try:
-            return PC.objects.get(pk=pk)
+            return PC.objects.select_related('technician_assigned').get(pk=pk)
         except PC.DoesNotExist:
             return None
 
@@ -127,11 +138,8 @@ class PCDetailView(APIView):
             return Response({'message': 'PC updated.', 'pc': PCSerializer(pc).data})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @extend_schema(summary="Delete PC")
+    @extend_schema(summary="Delete PC (Admin only)")
     def delete(self, request, pk):
-        # Only admins can delete
-        if not request.user.is_admin:
-            return Response({'error': 'Only Administrators can delete equipment.'}, status=status.HTTP_403_FORBIDDEN)
         pc = self.get_object(pk)
         if not pc:
             return Response({'error': 'PC not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -161,7 +169,7 @@ class AccessoryListView(APIView):
         ]
     )
     def get(self, request):
-        queryset = Accessory.objects.all()
+        queryset = Accessory.objects.select_related('technician_assigned').all()
         location = request.query_params.get('location')
         acc_status = request.query_params.get('status')
         name = request.query_params.get('name')
@@ -169,12 +177,14 @@ class AccessoryListView(APIView):
         if location:
             queryset = queryset.filter(location__icontains=location)
         if acc_status:
-            queryset = queryset.filter(status=acc_status)
+            # FIX #20: Use __iexact for case-insensitive status filter
+            queryset = queryset.filter(status__iexact=acc_status)
         if name:
-            queryset = queryset.filter(name=name)
+            queryset = queryset.filter(name__iexact=name)
 
         serializer = AccessorySerializer(queryset, many=True)
-        return Response({'count': queryset.count(), 'results': serializer.data})
+        data = serializer.data
+        return Response({'count': len(data), 'results': data})
 
     @extend_schema(summary="Register a new accessory", request=AccessoryWriteSerializer)
     def post(self, request):
@@ -193,12 +203,17 @@ class AccessoryDetailView(APIView):
     """
     GET /api/accessories/{id}/ | PUT /api/accessories/{id}/ | DELETE /api/accessories/{id}/
     """
-    permission_classes = [IsAdminOrTechnician]
     serializer_class = AccessorySerializer
+
+    def get_permissions(self):
+        """FIX #4: Admin-only DELETE via permission class, not manual check."""
+        if self.request.method == 'DELETE':
+            return [IsAdministrator()]
+        return [IsAdminOrTechnician()]
 
     def get_object(self, pk):
         try:
-            return Accessory.objects.get(pk=pk)
+            return Accessory.objects.select_related('technician_assigned').get(pk=pk)
         except Accessory.DoesNotExist:
             return None
 
@@ -220,10 +235,8 @@ class AccessoryDetailView(APIView):
             return Response({'message': 'Accessory updated.', 'accessory': AccessorySerializer(obj).data})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @extend_schema(summary="Delete accessory")
+    @extend_schema(summary="Delete accessory (Admin only)")
     def delete(self, request, pk):
-        if not request.user.is_admin:
-            return Response({'error': 'Only Administrators can delete equipment.'}, status=status.HTTP_403_FORBIDDEN)
         obj = self.get_object(pk)
         if not obj:
             return Response({'error': 'Accessory not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -253,7 +266,7 @@ class NetworkDeviceListView(APIView):
         ]
     )
     def get(self, request):
-        queryset = NetworkDevice.objects.all()
+        queryset = NetworkDevice.objects.select_related('technician_assigned').all()
         location = request.query_params.get('location')
         nd_status = request.query_params.get('status')
         name = request.query_params.get('name')
@@ -261,12 +274,14 @@ class NetworkDeviceListView(APIView):
         if location:
             queryset = queryset.filter(location__icontains=location)
         if nd_status:
-            queryset = queryset.filter(status=nd_status)
+            # FIX #20: Use __iexact for case-insensitive status filter
+            queryset = queryset.filter(status__iexact=nd_status)
         if name:
-            queryset = queryset.filter(name=name)
+            queryset = queryset.filter(name__iexact=name)
 
         serializer = NetworkDeviceSerializer(queryset, many=True)
-        return Response({'count': queryset.count(), 'results': serializer.data})
+        data = serializer.data
+        return Response({'count': len(data), 'results': data})
 
     @extend_schema(summary="Register a new network device", request=NetworkDeviceWriteSerializer)
     def post(self, request):
@@ -285,12 +300,17 @@ class NetworkDeviceDetailView(APIView):
     """
     GET /api/network-devices/{id}/ | PUT | DELETE
     """
-    permission_classes = [IsAdminOrTechnician]
     serializer_class = NetworkDeviceSerializer
+
+    def get_permissions(self):
+        """FIX #4: Admin-only DELETE via permission class, not manual check."""
+        if self.request.method == 'DELETE':
+            return [IsAdministrator()]
+        return [IsAdminOrTechnician()]
 
     def get_object(self, pk):
         try:
-            return NetworkDevice.objects.get(pk=pk)
+            return NetworkDevice.objects.select_related('technician_assigned').get(pk=pk)
         except NetworkDevice.DoesNotExist:
             return None
 
@@ -312,10 +332,8 @@ class NetworkDeviceDetailView(APIView):
             return Response({'message': 'Network device updated.', 'device': NetworkDeviceSerializer(obj).data})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @extend_schema(summary="Delete network device")
+    @extend_schema(summary="Delete network device (Admin only)")
     def delete(self, request, pk):
-        if not request.user.is_admin:
-            return Response({'error': 'Only Administrators can delete equipment.'}, status=status.HTTP_403_FORBIDDEN)
         obj = self.get_object(pk)
         if not obj:
             return Response({'error': 'Network device not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -337,9 +355,9 @@ class MyEquipmentView(APIView):
     @extend_schema(summary="Get my assigned equipment")
     def get(self, request):
         user = request.user
-        pcs = PC.objects.filter(technician_assigned=user)
-        accessories = Accessory.objects.filter(technician_assigned=user)
-        network_devices = NetworkDevice.objects.filter(technician_assigned=user)
+        pcs = PC.objects.select_related('technician_assigned').filter(technician_assigned=user)
+        accessories = Accessory.objects.select_related('technician_assigned').filter(technician_assigned=user)
+        network_devices = NetworkDevice.objects.select_related('technician_assigned').filter(technician_assigned=user)
 
         return Response({
             'technician': f"{user.full_name}",

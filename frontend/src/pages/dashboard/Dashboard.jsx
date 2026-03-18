@@ -15,10 +15,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
-// New Components (keep your imports)
 import StatusBadge from '../../components/dashboard/StatusBadge';
-
-
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -57,11 +54,8 @@ export default function Dashboard() {
   }, [fetchData]);
 
 
-  // Trend data – replace mock with real API data when available
-  // For now, we'll use a mix of real requests count + mock to show trend
+  // Weekly trend data — replace with real historical endpoint when available
   const trendData = useMemo(() => {
-    // If we had historical data, we'd use it. Here's a placeholder that uses today's numbers.
-    // In production, you'd fetch this from an endpoint.
     return [
       { name: 'Mon', requests: overview?.requests?.pending || 4, fixed: overview?.requests?.fixed || 2 },
       { name: 'Tue', requests: 7, fixed: 5 },
@@ -285,7 +279,7 @@ export default function Dashboard() {
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${t.assigned_requests > 3 ? 'bg-rose-500' : t.assigned_requests > 1 ? 'bg-amber-500' : 'bg-emerald-500'
                               }`}
-                            style={{ width: `${Math.min((t.assigned_requests / 5) * 100, 100)}%` }} // assuming max 5 for scaling
+                            style={{ width: `${Math.min((t.assigned_requests / 5) * 100, 100)}%` }}
                           />
                         </div>
                         <span className="text-[10px] font-bold text-slate-400 uppercase">{t.assigned_requests} active</span>

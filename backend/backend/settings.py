@@ -17,13 +17,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ─────────────────────────────────────────────
 # SECURITY SETTINGS
 # ─────────────────────────────────────────────
-# SECRET_KEY is loaded from .env file (keep it secret!)
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-production')
+# SECRET_KEY is loaded from .env file — NO default; Django will crash on startup
+# if SECRET_KEY is missing or empty, which is the correct behavior in production.
+SECRET_KEY = config('SECRET_KEY')
 
 # DEBUG should be False in production
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['*']  # Allow all hosts during development
+# Comma-separated list of allowed hosts. Example: localhost,127.0.0.1,yourdomain.com
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 
 # ─────────────────────────────────────────────
@@ -141,6 +143,16 @@ REST_FRAMEWORK = {
     ),
     # Use drf-spectacular for API documentation
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # Rate limiting — prevents brute-force attacks and spam
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '20/minute',   # Unauthenticated users: 20 requests/minute
+        'user': '300/minute',  # Authenticated users: 300 requests/minute
+        'login': '10/minute',  # Strict limit on login attempts
+    },
 }
 
 
@@ -182,7 +194,11 @@ SPECTACULAR_SETTINGS = {
 # ─────────────────────────────────────────────
 # CORS SETTINGS (Allow Frontend to Connect)
 # ─────────────────────────────────────────────
-CORS_ALLOW_ALL_ORIGINS = True  # In production, list specific allowed origins
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://localhost:3001'
+).split(',')
+
 
 
 # ─────────────────────────────────────────────
