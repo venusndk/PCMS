@@ -5,7 +5,8 @@ import { motion, useInView, AnimatePresence } from 'framer-motion';
 import {
   Shield, Monitor, Mouse, Network, ClipboardList,
   FileText, BarChart2, CheckCircle, UserPlus, Menu, X,
-  Users, Cpu, Wrench, Check, ChevronRight
+  Users, Cpu, Wrench, Check, ChevronRight,
+  LogIn, LayoutDashboard, Phone, Mail, MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -225,7 +226,7 @@ export default function Landing() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight"
           >
-            Smart IT Repair <br className="hidden sm:block" />
+            DIGITECH COMPANY<br className="hidden sm:block" />
           </motion.h1>
 
           {/* Subtitle */}
@@ -284,7 +285,7 @@ export default function Landing() {
             <img 
               src="/images/coding.jpg" 
               alt="Professional IT Management" 
-              className="w-full aspect-[4/3] object-cover object-center rounded-[2.5rem] shadow-2xl border border-white/20"
+              className="w-full aspect-[1/1.1] sm:aspect-[4/3] object-cover object-top rounded-[2.5rem] shadow-2xl border border-white/20"
             />
             
             {/* Decorative background glow */}
@@ -616,21 +617,21 @@ export default function Landing() {
             <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Quick Links</h4>
             <ul className="space-y-4">
               <li>
-                <button onClick={handleLogin} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Login
+                <button onClick={handleLogin} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-3 group">
+                  <LogIn size={16} className="text-indigo-500" />
+                  <span>Login</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => navigate('/submit-request')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Submit Request
+                <button onClick={() => navigate('/submit-request')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-3 group">
+                  <ClipboardList size={16} className="text-indigo-500" />
+                  <span>Submit Request</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => navigate('/dashboard')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Dashboard
+                <button onClick={() => navigate('/dashboard')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-3 group">
+                  <LayoutDashboard size={16} className="text-indigo-500" />
+                  <span>Dashboard</span>
                 </button>
               </li>
             </ul>
@@ -641,13 +642,18 @@ export default function Landing() {
             <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Contact Information</h4>
             <ul className="space-y-4">
               {[
-                { label: 'Tel', value: '+250 799 375 874' },
-                { label: 'Email', value: 'venustendikumana2003@gmail.com' },
-                { label: 'Location', value: 'Kigali, Rwanda' }
+                { label: 'Tel', value: '+250 799 375 874', icon: Phone },
+                { label: 'Email', value: 'venustendikumana2003@gmail.com', icon: Mail },
+                { label: 'Location', value: 'Kigali, Rwanda', icon: MapPin }
               ].map((item) => (
-                <li key={item.label} className="flex flex-col">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{item.label}</span>
-                  <span className="text-slate-300 text-sm mt-0.5">{item.value}</span>
+                <li key={item.label} className="flex items-start gap-3">
+                  <div className="mt-1 p-1.5 bg-slate-800 rounded-lg">
+                    <item.icon size={14} className="text-indigo-400" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{item.label}</span>
+                    <span className="text-slate-300 text-sm mt-0.5">{item.value}</span>
+                  </div>
                 </li>
               ))}
             </ul>
