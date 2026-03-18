@@ -1,6 +1,7 @@
 import { Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import NotificationButton from './NotificationButton';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar({ onMenuClick, title }) {
   const { user } = useAuth();
@@ -15,15 +16,19 @@ export default function Navbar({ onMenuClick, title }) {
 
       {/* Page title */}
       <div className="flex-1">
-        <h1 className="font-display text-base font-bold text-slate-800 dark:text-white">{title}</h1>
+        <h1 className="font-display text-base font-bold text-slate-800 dark:text-white uppercase tracking-tight">{title}</h1>
       </div>
 
       {/* Right side actions */}
-      <div className="flex items-center gap-2">
-        <NotificationButton />
-        <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-surface-950">
-          <span className="text-[10px] font-bold text-primary-700 dark:text-primary-400">{initials}</span>
+      <div className="flex items-center gap-1 sm:gap-3">
+        <div className="flex items-center gap-2 pr-2 border-r border-slate-100 dark:border-surface-800">
+          <NotificationButton />
+          <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-surface-950 shadow-sm">
+            <span className="text-[10px] font-bold text-primary-700 dark:text-primary-400">{initials}</span>
+          </div>
         </div>
+        
+        <ThemeToggle className="hover:rotate-12 transition-transform duration-300" />
       </div>
     </header>
   );
