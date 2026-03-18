@@ -199,126 +199,109 @@ export default function Landing() {
 
   /* ═══════════ HERO ═══════════ */
   const Hero = (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-16">
+    <section className="relative min-h-screen flex items-center overflow-hidden animate-gradient pt-16">
       {/* Animated blobs */}
       {[
-        { className: 'w-96 h-96 bg-indigo-600', style: { top: '10%', left: '5%' } },
-        { className: 'w-80 h-80 bg-purple-700', style: { top: '50%', right: '5%' } },
-        { className: 'w-72 h-72 bg-cyan-700', style: { bottom: '10%', left: '35%' } },
+        { className: 'w-96 h-96 bg-indigo-500', style: { top: '10%', left: '5%' } },
+        { className: 'w-80 h-80 bg-blue-600', style: { top: '50%', right: '5%' } },
+        { className: 'w-72 h-72 bg-indigo-400', style: { bottom: '10%', left: '35%' } },
       ].map((blob, i) => (
         <motion.div
           key={i}
-          className={`absolute ${blob.className} rounded-full blur-3xl`}
-          style={{ ...blob.style, opacity: 0.15 }}
-          animate={{ x: [0, 30, 0], y: [0, -30, 0], scale: [1, 1.1, 1] }}
-          transition={{ duration: 8 + i * 2, repeat: Infinity, ease: 'easeInOut' }}
+          className={`absolute ${blob.className} rounded-full blur-[120px]`}
+          style={{ ...blob.style, opacity: 0.2 }}
+          animate={{ x: [0, 40, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
+          transition={{ duration: 10 + i * 2, repeat: Infinity, ease: 'easeInOut' }}
         />
       ))}
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center min-h-[calc(100vh-100px)]">
         {/* Left content */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-        >
+        <div className="z-10">
           {/* Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
-            Smart IT Asset <br className="hidden sm:block" />
-          </h1>
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight"
+          >
+            Smart IT Repair <br className="hidden sm:block" />
+          </motion.h1>
 
           {/* Subtitle */}
-          <p className="text-slate-300 text-base md:text-lg lg:text-xl leading-relaxed mb-8 max-w-lg">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="text-slate-200 text-sm md:text-base lg:text-lg leading-relaxed mb-6 max-w-lg"
+          >
             Complete IT infrastructure management for computers, accessories, network devices,
             and support requests, all managed in one powerful platform.
-          </p>
+          </motion.p>
 
           {/* CTA buttons */}
-          <div className="flex flex-wrap gap-4 mb-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            className="flex flex-wrap gap-4 mb-4"
+          >
             <button
               onClick={handleLogin}
-              className="btn-primary-premium flex items-center gap-2 px-8 py-4 text-base"
+              className="btn-primary-premium flex items-center gap-2 px-8 py-3.5 text-base group"
             >
-              Enter System <ChevronRight size={18} />
+              Enter System <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
             </button>
             <button
               onClick={() => navigate('/submit-request')}
-              className="bg-transparent border border-white/40 hover:border-white/70 text-white font-medium px-7 py-3.5 rounded-xl transition-colors"
+              className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white font-semibold px-7 py-3 rounded-2xl transition-all"
             >
               Submit Request
             </button>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
-        {/* Right – Dashboard mockup */}
+        {/* Right – Hero Image with Parallax & Floating */}
         <motion.div
-          initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="hidden lg:block"
+          initial={{ opacity: 0, scale: 0.8, rotateY: -10 }}
+          animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden lg:block relative perspective-1000"
         >
           <motion.div
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="bg-slate-800/80 backdrop-blur border border-slate-700 rounded-3xl p-6 shadow-2xl"
+            animate={{ 
+              y: [0, -15, 0],
+              rotateZ: [0, 0.5, 0, -0.5, 0]
+            }}
+            transition={{ 
+              duration: 5, 
+              repeat: Infinity, 
+              ease: 'easeInOut' 
+            }}
+            className="relative hero-glow"
           >
-            {/* Window top bar */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-red-500/80" />
-                <span className="w-3 h-3 rounded-full bg-yellow-400/80" />
-                <span className="w-3 h-3 rounded-full bg-green-500/80" />
-              </div>
-              <span className="ml-4 text-slate-400 text-[10px] font-mono uppercase tracking-widest text-indigo-400/80">PCMS — Dashboard</span>
-            </div>
-
-            {/* Stat cards 2×2 */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {[
-                { label: 'PCs', value: '124', icon: Monitor, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-                { label: 'Requests', value: '38', icon: ClipboardList, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-                { label: 'Fixed', value: '92', icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-                { label: 'Technicians', value: '12', icon: Users, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-              ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="bg-slate-700/40 border border-slate-600/30 rounded-2xl p-4 flex items-center gap-4">
-                  <div className={`w-10 h-10 ${bg} rounded-xl flex items-center justify-center`}>
-                    <Icon size={18} className={color} />
-                  </div>
-                  <div>
-                    <div className="text-white font-bold text-xl leading-none">{value}</div>
-                    <div className="text-slate-400 text-xs mt-1 font-medium">{label}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Fake bar chart */}
-            <div className="bg-slate-700/20 border border-slate-600/20 rounded-2xl p-5">
-              <div className="flex justify-between items-center mb-4">
-                <div className="text-slate-300 text-xs font-bold">Monthly Repairs</div>
-                <div className="text-[10px] text-slate-500 font-medium">Last 12 Months</div>
-              </div>
-              <div className="flex items-end gap-2.5 h-28">
-                {[40, 65, 50, 80, 55, 90, 70, 85, 60, 75, 95, 88].map((h, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 rounded-t-md transition-all duration-300 hover:scale-y-110 cursor-pointer"
-                    style={{
-                      height: `${h}%`,
-                      background: i % 3 === 0
-                        ? '#6366f1'
-                        : i % 3 === 1
-                          ? '#10b981'
-                          : '#8b5cf6',
-                      opacity: 0.9,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Main Image */}
+            <img 
+              src="/images/coding.jpg" 
+              alt="Professional IT Management" 
+              className="w-full aspect-[4/3] object-cover object-center rounded-[2.5rem] shadow-2xl border border-white/20"
+            />
+            
+            {/* Decorative background glow */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 blur-3xl -z-10 rounded-full" />
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <div className="w-[1px] h-10 bg-gradient-to-b from-indigo-500 to-transparent" />
+      </motion.div>
     </section>
   );
 
@@ -624,7 +607,7 @@ export default function Landing() {
               <span className="text-white font-bold text-xl uppercase tracking-tight">PCMS</span>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
-              Complete Personal Computer Maintenance Management (PCMS) for modern organizations. Built for efficiency and reliability.
+              Complete Personal Computer Maintenance  (PCMS) for modern organizations. Built for efficiency and reliability.
             </p>
           </div>
 
@@ -635,19 +618,19 @@ export default function Landing() {
               <li>
                 <button onClick={handleLogin} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Staff Login
+                  Login
                 </button>
               </li>
               <li>
                 <button onClick={() => navigate('/submit-request')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Submit ICT Request
+                  Submit Request
                 </button>
               </li>
               <li>
                 <button onClick={() => navigate('/dashboard')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  System Dashboard
+                  Dashboard
                 </button>
               </li>
             </ul>
