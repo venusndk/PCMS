@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
     <div className="min-h-screen flex items-center justify-center bg-surface-50">
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 border-3 border-primary-200 border-t-primary-600 rounded-full animate-spin" style={{borderWidth:'3px'}} />
-        <p className="text-sm text-slate-500 font-medium">Loading PCM System...</p>
+        <p className="text-sm text-slate-500 font-medium">Loading PCMS...</p>
       </div>
     </div>
   );

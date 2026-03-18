@@ -47,10 +47,10 @@ function StatCounter({ value, label, suffix = '+' }) {
 
   return (
     <div ref={ref} className="flex flex-col items-center">
-      <span className="text-4xl font-extrabold text-white">
+      <span className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
         {count}{hasPercent ? '%' : suffix}
       </span>
-      <span className="text-indigo-200 text-sm mt-1 text-center">{label}</span>
+      <span className="text-indigo-200 text-xs md:text-sm mt-2 text-center font-medium">{label}</span>
     </div>
   );
 }
@@ -132,11 +132,11 @@ export default function Landing() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <Shield size={18} className="text-white" />
+          <Link to="/" className="flex items-center gap-2 group shrink-0">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-indigo-600 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-indigo-500/20">
+              <img src="/logo.png" alt="PCMS Logo" className="w-5 h-5 md:w-6 md:h-6 object-contain" />
             </div>
-            <span className={`font-bold text-lg ${isScrolled ? 'text-slate-900 dark:text-white' : 'text-white'}`}>
+            <span className={`font-bold text-lg md:text-xl transition-colors group-hover:text-indigo-500 ${isScrolled ? 'text-slate-900 dark:text-white' : 'text-white'}`}>
               PCMS
             </span>
           </Link>
@@ -148,14 +148,14 @@ export default function Landing() {
               className={`text-sm font-medium transition-colors ${isScrolled ? 'text-slate-600 hover:text-indigo-600' : 'text-slate-200 hover:text-white'
                 }`}
             >
-              Submit ICT Request
+              Submit Request
             </button>
             <ThemeToggle className={isScrolled ? "" : "text-white dark:text-white hover:bg-white/10 dark:hover:bg-white/10"} />
             <button
               onClick={handleLogin}
               className="btn-primary-premium text-sm px-6 py-2"
             >
-              Login to System
+              Login
             </button>
           </div>
 
@@ -215,19 +215,22 @@ export default function Landing() {
         />
       ))}
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-14 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         {/* Left content */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-
+          {/* Title */}
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
+            Smart IT Asset <br className="hidden sm:block" />
+          </h1>
 
           {/* Subtitle */}
-          <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-lg">
+          <p className="text-slate-300 text-base md:text-lg lg:text-xl leading-relaxed mb-8 max-w-lg">
             Complete IT infrastructure management for computers, accessories, network devices,
-            and ICT support requests, all managed in one powerful platform.
+            and support requests, all managed in one powerful platform.
           </p>
 
           {/* CTA buttons */}
@@ -245,15 +248,6 @@ export default function Landing() {
               Submit Request
             </button>
           </div>
-
-          {/* Trust indicators */}
-          <div className="flex flex-wrap gap-5">
-            {['Role-based access', 'Real-time dashboard', 'JWT secured'].map((t) => (
-              <span key={t} className="flex items-center gap-1.5 text-slate-400 text-sm">
-                <CheckCircle size={14} className="text-emerald-400" /> {t}
-              </span>
-            ))}
-          </div>
         </motion.div>
 
         {/* Right – Dashboard mockup */}
@@ -261,56 +255,62 @@ export default function Landing() {
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
+          className="hidden lg:block"
         >
           <motion.div
             animate={{ y: [0, -12, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="bg-slate-800/80 backdrop-blur border border-slate-700 rounded-2xl p-5 shadow-2xl"
+            className="bg-slate-800/80 backdrop-blur border border-slate-700 rounded-3xl p-6 shadow-2xl"
           >
             {/* Window top bar */}
-            <div className="flex items-center gap-2 mb-5">
-              <span className="w-3 h-3 rounded-full bg-red-500" />
-              <span className="w-3 h-3 rounded-full bg-yellow-400" />
-              <span className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="ml-4 text-slate-400 text-xs">PCM System — Dashboard</span>
+            <div className="flex items-center gap-2 mb-6">
+              <div className="flex gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-red-500/80" />
+                <span className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                <span className="w-3 h-3 rounded-full bg-green-500/80" />
+              </div>
+              <span className="ml-4 text-slate-400 text-[10px] font-mono uppercase tracking-widest text-indigo-400/80">PCMS — Dashboard</span>
             </div>
 
             {/* Stat cards 2×2 */}
-            <div className="grid grid-cols-2 gap-3 mb-5">
+            <div className="grid grid-cols-2 gap-4 mb-6">
               {[
                 { label: 'PCs', value: '124', icon: Monitor, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
                 { label: 'Requests', value: '38', icon: ClipboardList, color: 'text-amber-400', bg: 'bg-amber-500/10' },
                 { label: 'Fixed', value: '92', icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
                 { label: 'Technicians', value: '12', icon: Users, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="bg-slate-700/50 rounded-xl p-3 flex items-center gap-3">
-                  <div className={`w-8 h-8 ${bg} rounded-lg flex items-center justify-center`}>
-                    <Icon size={16} className={color} />
+                <div key={label} className="bg-slate-700/40 border border-slate-600/30 rounded-2xl p-4 flex items-center gap-4">
+                  <div className={`w-10 h-10 ${bg} rounded-xl flex items-center justify-center`}>
+                    <Icon size={18} className={color} />
                   </div>
                   <div>
-                    <div className="text-white font-bold text-lg leading-none">{value}</div>
-                    <div className="text-slate-400 text-xs mt-0.5">{label}</div>
+                    <div className="text-white font-bold text-xl leading-none">{value}</div>
+                    <div className="text-slate-400 text-xs mt-1 font-medium">{label}</div>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Fake bar chart */}
-            <div className="bg-slate-700/30 rounded-xl p-4">
-              <div className="text-slate-400 text-xs mb-3">Monthly Repairs</div>
-              <div className="flex items-end gap-2 h-24">
+            <div className="bg-slate-700/20 border border-slate-600/20 rounded-2xl p-5">
+              <div className="flex justify-between items-center mb-4">
+                <div className="text-slate-300 text-xs font-bold">Monthly Repairs</div>
+                <div className="text-[10px] text-slate-500 font-medium">Last 12 Months</div>
+              </div>
+              <div className="flex items-end gap-2.5 h-28">
                 {[40, 65, 50, 80, 55, 90, 70, 85, 60, 75, 95, 88].map((h, i) => (
                   <div
                     key={i}
-                    className="flex-1 rounded-t-sm"
+                    className="flex-1 rounded-t-md transition-all duration-300 hover:scale-y-110 cursor-pointer"
                     style={{
                       height: `${h}%`,
                       background: i % 3 === 0
-                        ? 'rgb(99,102,241)'
+                        ? '#6366f1'
                         : i % 3 === 1
-                          ? 'rgb(16,185,129)'
-                          : 'rgb(139,92,246)',
-                      opacity: 0.8,
+                          ? '#10b981'
+                          : '#8b5cf6',
+                      opacity: 0.9,
                     }}
                   />
                 ))}
@@ -392,12 +392,12 @@ export default function Landing() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-16 px-4"
         >
-          <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
-            Everything You Need to Manage IT
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
+            Everything You Need <br className="hidden sm:block" /> to Manage IT
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-500 dark:text-slate-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
             One platform to track, assign, report, and resolve all your ICT needs.
           </p>
         </motion.div>
@@ -505,12 +505,12 @@ export default function Landing() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-16 px-4"
         >
-          <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
             Built for Your Entire IT Team
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-lg">
+          <p className="text-slate-500 dark:text-slate-400 text-base md:text-lg">
             Different roles, different access levels, same powerful platform
           </p>
         </motion.div>
@@ -578,30 +578,30 @@ export default function Landing() {
 
   /* ═══════════ CTA BANNER ═══════════ */
   const CTABanner = (
-    <section className="bg-gradient-to-r from-indigo-600 to-indigo-800 py-20">
+    <section className="bg-gradient-to-r from-indigo-600 to-indigo-800 py-16 md:py-24">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="max-w-3xl mx-auto px-4 text-center"
+        className="max-w-4xl mx-auto px-6 text-center"
       >
-        <h2 className="text-4xl font-extrabold text-white mb-4">
-          Ready to streamline your IT management?
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
+          Ready to streamline your <br className="hidden sm:block" /> IT management?
         </h2>
-        <p className="text-indigo-200 text-lg mb-10">
-          Join your team on the PCM System today
+        <p className="text-indigo-100 text-base md:text-lg lg:text-xl mb-10 opacity-90">
+          Join your team on the PCM System and experience modern efficiency today.
         </p>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4">
           <button
             onClick={handleLogin}
-            className="btn-primary-premium bg-white text-indigo-700 hover:bg-indigo-50 font-bold px-10 py-4"
+            className="btn-primary-premium bg-white text-indigo-700 hover:bg-indigo-50 font-bold px-10 py-4 w-full sm:w-auto text-lg"
           >
             Enter System
           </button>
           <button
             onClick={() => navigate('/submit-request')}
-            className="bg-transparent border border-white/50 hover:border-white text-white font-bold px-8 py-3.5 rounded-xl transition-colors"
+            className="bg-transparent border-2 border-white/30 hover:border-white hover:bg-white/5 text-white font-bold px-8 py-3.5 rounded-2xl transition-all w-full sm:w-auto"
           >
             Submit a Request
           </button>
@@ -613,38 +613,41 @@ export default function Landing() {
   /* ═══════════ FOOTER ═══════════ */
   const Footer = (
     <footer className="bg-slate-900 dark:bg-surface-950 pt-16 pb-8 border-t border-slate-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
           {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Shield size={16} className="text-white" />
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10">
+                <Shield size={20} className="text-white" />
               </div>
-              <span className="text-white font-bold text-lg">PCM System</span>
+              <span className="text-white font-bold text-xl uppercase tracking-tight">PCMS</span>
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Personal Computer Maintenance Management System
+            <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
+              Complete Personal Computer Maintenance Management (PCMS) for modern organizations. Built for efficiency and reliability.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-bold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Quick Links</h4>
+            <ul className="space-y-4">
               <li>
-                <button onClick={handleLogin} className="text-slate-400 hover:text-white text-sm transition-colors">
+                <button onClick={handleLogin} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                   Staff Login
                 </button>
               </li>
               <li>
-                <button onClick={() => navigate('/submit-request')} className="text-slate-400 hover:text-white text-sm transition-colors">
+                <button onClick={() => navigate('/submit-request')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                   Submit ICT Request
                 </button>
               </li>
               <li>
-                <button onClick={() => navigate('/dashboard')} className="text-slate-400 hover:text-white text-sm transition-colors">
-                  Dashboard
+                <button onClick={() => navigate('/dashboard')} className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  System Dashboard
                 </button>
               </li>
             </ul>
@@ -652,19 +655,29 @@ export default function Landing() {
 
           {/* System Info */}
           <div>
-            <h4 className="text-white font-bold mb-4">Contact</h4>
-            <ul className="space-y-2">
-              {['Tel: +250799375874', 'Email: venustendikumana2003@gmail.com', 'Location: Kigali, Rwanda'].map((item) => (
-                <li key={item} className="text-slate-400 text-sm">{item}</li>
+            <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Contact Information</h4>
+            <ul className="space-y-4">
+              {[
+                { label: 'Tel', value: '+250 799 375 874' },
+                { label: 'Email', value: 'venustendikumana2003@gmail.com' },
+                { label: 'Location', value: 'Kigali, Rwanda' }
+              ].map((item) => (
+                <li key={item.label} className="flex flex-col">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{item.label}</span>
+                  <span className="text-slate-300 text-sm mt-0.5">{item.value}</span>
+                </li>
               ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="text-slate-500 text-xs">&copy; 2026 PCM System. All rights reserved.</p>
-          <p className="text-slate-500 text-xs">Built By: Venuste NDIKUMANA</p>
+        <div className="border-t border-slate-800/60 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+          <p className="text-slate-500 text-xs font-medium tracking-wide">&copy; 2026 PCMS. All rights reserved.</p>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-600 text-[10px] uppercase font-bold tracking-widest">Built By</span>
+            <span className="text-indigo-400 text-xs font-bold hover:text-indigo-300 transition-colors cursor-default">Venuste NDIKUMANA</span>
+          </div>
         </div>
       </div>
     </footer>
@@ -672,14 +685,16 @@ export default function Landing() {
 
   /* ═══════════ RENDER ═══════════ */
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen font-sans overflow-x-hidden selection:bg-indigo-500 selection:text-white">
       {Navbar}
-      {Hero}
-      {StatsBar}
-      {Features}
-      {HowItWorks}
-      {UserRoles}
-      {CTABanner}
+      <main>
+        {Hero}
+        {StatsBar}
+        {Features}
+        {HowItWorks}
+        {UserRoles}
+        {CTABanner}
+      </main>
       {Footer}
     </div>
   );

@@ -39,10 +39,10 @@ export default function Login() {
       <div className="relative w-full max-w-md animate-slide-up">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-primary-600 rounded-2xl shadow-elevated mb-4">
-            <Shield className="w-7 h-7 text-white" />
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl shadow-elevated mb-4 p-3">
+            <img src="/logo.png" alt="PCMS Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="font-display text-3xl font-800 text-slate-900">PCM System</h1>
+          <h1 className="font-display text-3xl font-800 text-slate-900 dark:text-white">PCMS</h1>
           <p className="text-slate-500 text-sm mt-1">Personal Computer Maintenance</p>
         </div>
 
@@ -108,8 +108,8 @@ export default function Login() {
           </div>
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6">
-          © 2024 PCM System. All rights reserved.
+        <p className="text-center text-xs text-slate-400 mt-6 font-medium tracking-wide">
+          &copy; 2026 PCMS. All rights reserved.
         </p>
       </div>
     </div>

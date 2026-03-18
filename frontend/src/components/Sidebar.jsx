@@ -93,14 +93,17 @@ export default function Sidebar({ mobile = false, onClose, collapsed = false, on
     >
       {/* Brand Header */}
       <div className="flex items-center justify-between h-20 px-4 shrink-0 border-b border-slate-100 dark:border-surface-800/60">
-        <div className={`flex items-center gap-3 overflow-hidden transition-all duration-300 ${(collapsed && !mobile) ? 'w-0 opacity-0 hidden' : 'flex-1'}`}>
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary-600 shadow-md shadow-primary-500/20 shrink-0">
-            <Shield className="w-5 h-5 text-white" />
+        <NavLink 
+          to="/" 
+          className={`flex items-center gap-3 overflow-hidden transition-all duration-300 group hover:opacity-80 ${(collapsed && !mobile) ? 'w-0 opacity-0 hidden' : 'flex-1'}`}
+        >
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary-600 shadow-md shadow-primary-500/20 shrink-0 transition-transform group-hover:scale-105">
+            <img src="/logo.png" alt="PCMS Logo" className="w-6 h-6 object-contain" />
           </div>
           <div className="flex flex-col flex-1 overflow-hidden">
-            <span className="font-display font-bold text-slate-900 dark:text-white truncate">PCM System</span>
+            <span className="font-display font-bold text-slate-900 dark:text-white truncate uppercase tracking-tight">PCMS</span>
           </div>
-        </div>
+        </NavLink>
 
         {/* Desktop Collapse Toggle */}
         {!mobile && (
