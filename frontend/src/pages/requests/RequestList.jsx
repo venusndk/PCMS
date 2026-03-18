@@ -38,7 +38,12 @@ export default function RequestList() {
   const [saving,   setSaving]   = useState(false);
   const [error,    setError]    = useState('');
   const { showToast } = useToast();
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  
+  // SOLVED: Isolate forms to prevent cross-validation conflicts (e.g., status required in assign modal)
+  const assignForm = useForm();
+  const statusForm = useForm();
+
+  const watchedTechId = assignForm.watch('technician_id');
 
   const load = useCallback(() => {
     setLoading(true);
@@ -101,26 +106,30 @@ export default function RequestList() {
   useEffect(() => { load(); }, [load]);
 
   const openView   = (r) => { setSelected(r); setModal('view'); };
-  const openAssign = (r) => { setSelected(r); reset({}); setModal('assign'); setError(''); };
-  const openStatus = (r) => { setSelected(r); setModal('status'); setError(''); };
+  const openAssign = (r) => { setSelected(r); assignForm.reset({ technician_id: '' }); setModal('assign'); setError(''); };
+  const openStatus = (r) => { setSelected(r); statusForm.reset({ status: 'Fixed' }); setModal('status'); setError(''); };
   const openDelete = (r) => { setSelected(r); setModal('delete'); };
   const close      = () => { setModal(null); setSelected(null); };
 
   const handleAssign = async (data) => {
     setSaving(true); setError('');
     try {
-      const techId = parseInt(data.technician_id, 10);
-      if (isNaN(techId)) throw new Error("Invalid technician selected.");
+      if (!selected || !selected.id) {
+        console.error('[ASSIGN] No request selected for assignment');
+        throw new Error("No request selected. Please close and try again.");
+      }
 
-      // DEBUG: Log the assignment attempt
-      console.log(`[ASSIGN] Assigning request #${selected.id} to technician #${techId}`);
+      const techId = parseInt(data.technician_id, 10);
+      if (isNaN(techId)) throw new Error("Please select a technician.");
+
+      console.log(`[ASSIGN] Starting assignment: Request #${selected.id} -> Tech #${techId}`);
+      console.log('[ASSIGN] Payload:', { technician_id: techId });
 
       const res = await requestService.assignTechnician(selected.id, {
         technician_id: techId
       });
 
-      // DEBUG: Log the response
-      console.log('[ASSIGN] API Response:', res?.data);
+      console.log('[ASSIGN] API Success:', res?.data);
 
       // CRITICAL: Validate response structure
       if (!res?.data) {
@@ -320,7 +329,7 @@ export default function RequestList() {
                           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openView(r)} className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all font-bold" title="View details">
                             <Eye className="w-4 h-4" />
                           </motion.button>
-                          {isAdmin && (
+                          {isAdmin && r.status?.toLowerCase() === 'pending' && (
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => openAssign(r)} className="p-2 rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all font-bold" title="Assign technician">
                               <UserPlus className="w-4 h-4" />
                             </motion.button>
@@ -383,12 +392,12 @@ export default function RequestList() {
       {/* Assign Technician Modal */}
       <Modal open={modal === 'assign'} onClose={close} title="Assign Technician" size="sm">
         {error && <p className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg p-3 mb-4">{error}</p>}
-        <form onSubmit={handleSubmit(handleAssign)} className="space-y-4">
+        <form onSubmit={assignForm.handleSubmit(handleAssign, (e) => console.error('[ASSIGN] Form Validation Failed:', e))} className="space-y-4">
           <div>
             <label className="label">Select Technician *</label>
             <select
-              className={`input-premium ${errors.technician_id ? 'border-red-500 ring-1 ring-red-500 bg-red-50' : ''}`}
-              {...register('technician_id', { required: 'Please select a technician.' })}
+              className={`input-premium ${assignForm.formState.errors.technician_id ? 'border-red-500 ring-1 ring-red-500 bg-red-50' : ''}`}
+              {...assignForm.register('technician_id', { required: 'Please select a technician.' })}
               disabled={saving}
             >
               <option value="">
@@ -405,21 +414,42 @@ export default function RequestList() {
                 </option>
               ))}
             </select>
-            {errors.technician_id && (
-              <p className="text-xs font-bold text-red-500 mt-1.5">{errors.technician_id.message}</p>
+            {assignForm.formState.errors.technician_id && (
+              <p className="text-xs font-bold text-red-500 mt-1.5">{assignForm.formState.errors.technician_id.message}</p>
             )}
-            {!errors.technician_id && Array.isArray(techs) && techs.filter(t => t.status?.toLowerCase() === 'available').length === 0 && (
+            {!assignForm.formState.errors.technician_id && Array.isArray(techs) && techs.filter(t => t.status?.toLowerCase() === 'available').length === 0 && (
               <p className="text-xs text-amber-500 mt-1.5">⚠️ No available technicians at this time</p>
             )}
           </div>
           <div className="flex gap-3 justify-end pt-6 border-t border-slate-100 dark:border-surface-800">
-            <button type="button" onClick={close} disabled={saving} className="btn-secondary">Cancel</button>
+            <button type="button" onClick={() => { console.log('[CLICK] Cancel'); close(); }} disabled={saving} className="btn-secondary">Cancel</button>
             <button 
-              type="submit" 
-              disabled={saving || (Array.isArray(techs) && techs.filter(t => t.status?.toLowerCase() === 'available').length === 0)}
-              className="btn-primary-premium"
+              type="button" 
+              onClick={(e) => {
+                assignForm.handleSubmit(
+                  (data) => {
+                    handleAssign(data);
+                  },
+                  (err) => {
+                    console.error('[FORM] Validation Errors:', err);
+                    setError('Please select a technician.');
+                  }
+                )(e);
+              }}
+              disabled={saving}
+              className="btn-primary-premium flex items-center gap-2"
             >
-              {saving ? 'Assigning...' : 'Assign Technician'}
+              {saving ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Assigning...</span>
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4" />
+                  <span>Assign Technician</span>
+                </>
+              )}
             </button>
           </div>
         </form>
@@ -428,10 +458,10 @@ export default function RequestList() {
       {/* Update Status Modal */}
       <Modal open={modal === 'status'} onClose={close} title="Update Request Status" size="sm">
         {error && <p className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg p-3 mb-4">{error}</p>}
-        <form onSubmit={handleSubmit(handleStatus)} className="space-y-4">
+        <form onSubmit={statusForm.handleSubmit(handleStatus)} className="space-y-4">
           <div>
             <label className="label">New Status *</label>
-            <select className="input-premium" {...register('status', { required: true })}>
+            <select className="input-premium" {...statusForm.register('status', { required: true })}>
               <option value="Fixed">✅ Fixed</option>
               <option value="Not Fixed">❌ Not Fixed</option>
             </select>

@@ -189,6 +189,17 @@ class AssignTechnicianView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        # Ensure we only assign technicians to 'Pending' requests.
+        # This prevents accidental re-assignment or assignment of already resolved requests.
+        if req.status != 'Pending':
+            return Response(
+                {
+                    'error': 'Forbidden operation.',
+                    'detail': f'Cannot assign a technician to a request with status "{req.status}". Only "Pending" requests can be assigned.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         serializer = AssignTechnicianSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
