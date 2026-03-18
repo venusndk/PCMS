@@ -260,3 +260,37 @@ class ChangePasswordView(APIView):
             user.save()
             return Response({'message': 'Password changed successfully.'})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ─────────────────────────────────────────────────────────────
+# SYSTEM TESTING / HEALTH CHECK
+# ─────────────────────────────────────────────────────────────
+@extend_schema(tags=['System'])
+class TestingView(APIView):
+    """
+    Simple health check endpoint to verify API and Database status.
+    Accessible to anyone (no auth required).
+    """
+    permission_classes = [AllowAny]
+
+    @extend_schema(
+        summary="API Health Check",
+        description="Check if the API and Database are running correctly.",
+        responses={200: {'type': 'object', 'properties': {'status': {'type': 'string'}, 'database': {'type': 'string'}, 'timestamp': {'type': 'string'}}}}
+    )
+    def get(self, request):
+        from django.db import connection
+        from django.utils import timezone
+        
+        db_status = "Connected"
+        try:
+            connection.ensure_connection()
+        except Exception as e:
+            db_status = f"Error: {str(e)}"
+
+        return Response({
+            "status": "API is running",
+            "database": db_status,
+            "timestamp": timezone.now().isoformat(),
+            "environment": "Development" if connection.settings_dict['NAME'] == 'PCM' else "Production"
+        }, status=status.HTTP_200_OK)

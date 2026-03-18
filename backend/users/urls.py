@@ -17,6 +17,9 @@ urlpatterns = [
     path('me/', views.MyProfileView.as_view(), name='my-profile'),
     path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
 
+    # ── System / Health Check ───────────────────────────────────
+    path('testing/', views.TestingView.as_view(), name='testing'),
+
     # ── Technician Management (Admin Only) ──────────────────────
     path('technicians/', views.TechnicianListView.as_view(), name='technician-list'),
     path('technicians/<int:pk>/', views.TechnicianDetailView.as_view(), name='technician-detail'),
