@@ -57,6 +57,15 @@ class Request(models.Model):
         related_name='assigned_requests'
     )
 
+    # Tracking updates (Who fixed it and when)
+    updated_by           = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='updated_requests'
+    )
+    updated_at           = models.DateTimeField(auto_now=True)
+
     class Meta:
         db_table = 'requests'
         ordering = ['-date']  # Newest first

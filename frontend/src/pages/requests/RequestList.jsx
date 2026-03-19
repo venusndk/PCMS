@@ -75,33 +75,54 @@ export default function RequestList() {
   }, [filter, isAdmin, showToast]);
 
   // Silent background sync — refreshes data WITHOUT showing spinner or resetting the table.
-  // Used after assignment so an item doesn't disappear due to an active status filter.
+  // Now includes change detection to notify Admin when a technician updates a status.
   const silentRefresh = useCallback(() => {
     const params = { ...filter, _t: Date.now() };
     requestService.list(params)
       .then(r => {
         const data = r.data.results || r.data;
-        console.log('[SILENT_REFRESH] Requests refreshed:', data.length, 'items');
-        setItems(Array.isArray(data) ? data : []);
+        const newData = Array.isArray(data) ? data : [];
+        
+        // ADMIN NOTIFICATION: Detect if any request status was updated by a technician
+        if (isAdmin && items.length > 0) {
+          newData.forEach(newItem => {
+            const oldItem = items.find(i => i.id === newItem.id);
+            if (oldItem && oldItem.status !== newItem.status) {
+              // If status moved to Fixed or Not Fixed, it was a technician resolution
+              if (newItem.status === 'Fixed' || newItem.status === 'Not Fixed') {
+                const techName = newItem.updated_by ? newItem.updated_by.first_name : 'Technician';
+                showToast(`Request #${newItem.id} marked as ${newItem.status} by ${techName}`, 'success');
+              }
+            }
+          });
+        }
+        
+        setItems(newData);
       })
       .catch((err) => {
         console.error('[SILENT_REFRESH] Failed to refresh requests:', err.message);
-        // Silent failures don't show toast (background sync)
       });
     
     if (isAdmin) {
       technicianService.list()
         .then(r => {
           const data = r.data.results || r.data;
-          console.log('[SILENT_REFRESH] Technicians refreshed:', data.length, 'items');
           setTechs(Array.isArray(data) ? data : []);
         })
         .catch((err) => {
           console.error('[SILENT_REFRESH] Failed to refresh technicians:', err.message);
-          // Silent failures don't show toast
         });
     }
-  }, [filter, isAdmin]);
+  }, [filter, isAdmin, items, showToast]);
+
+  // Polling: Automatically Refresh every 15 seconds for Administrators
+  useEffect(() => {
+    if (!isAdmin) return;
+    const interval = setInterval(() => {
+      silentRefresh();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [isAdmin, silentRefresh]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -259,12 +280,14 @@ export default function RequestList() {
               <thead className="table-head">
                 <tr>
                   <th className="table-th">ID</th>
-                  <th className="table-th">Requester</th>
+                   <th className="table-th">Requester</th>
                   <th className="table-th">Unit</th>
                   <th className="table-th">Type</th>
                   <th className="table-th">Date</th>
                   <th className="table-th">Status</th>
                   <th className="table-th">Technician</th>
+                  <th className="table-th">Updated By</th>
+                  <th className="table-th">Last Update</th>
                   <th className="table-th">Actions</th>
                 </tr>
               </thead>
@@ -323,6 +346,22 @@ export default function RequestList() {
                         ) : (
                           <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Unassigned</span>
                         )}
+                      </td>
+                      <td className="px-6 py-4">
+                        {r.updated_by ? (
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase">
+                              {r.updated_by.first_name} {r.updated_by.last_name}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-[10px] font-bold text-slate-300 uppercase italic">No updates</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-[11px] font-bold text-slate-500 group-hover:text-slate-600 transition-colors">
+                          {r.updated_at ? new Date(r.updated_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : '—'}
+                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-1.5">

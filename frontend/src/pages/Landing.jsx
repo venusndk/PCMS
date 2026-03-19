@@ -226,7 +226,7 @@ export default function Landing() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight"
           >
-            DIGITECH COMPANY<br className="hidden sm:block" />
+            VENTECH COMPANY<br className="hidden sm:block" />
           </motion.h1>
 
           {/* Subtitle */}

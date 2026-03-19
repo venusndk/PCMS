@@ -6,13 +6,14 @@ from users.serializers import UserSerializer
 class RequestSerializer(serializers.ModelSerializer):
     """For reading request data - shows technician details."""
     assigned_technician = UserSerializer(read_only=True)
+    updated_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Request
         fields = ['id', 'first_name', 'last_name', 'email', 'telephone',
                   'unit', 'request_type', 'description', 'date',
-                  'status', 'assigned_technician']
-        read_only_fields = ['id', 'date', 'status', 'assigned_technician']
+                  'status', 'assigned_technician', 'updated_by', 'updated_at']
+        read_only_fields = ['id', 'date', 'status', 'assigned_technician', 'updated_by', 'updated_at']
 
 
 class RequestCreateSerializer(serializers.ModelSerializer):

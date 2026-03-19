@@ -10,7 +10,7 @@ const StatusBadge = ({ status, className = '' }) => {
     if (s === 'completed' || s === 'fixed' || s === 'available' || s === 'working') {
       return 'bg-emerald-100/50 text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:ring-emerald-800/50';
     }
-    if (s === 'urgent' || s === 'critical' || s === 'not working' || s === 'not available') {
+    if (s === 'urgent' || s === 'critical' || s === 'not working' || s === 'not available' || s === 'not fixed') {
       return 'bg-rose-100/50 text-rose-700 ring-1 ring-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:ring-rose-800/50';
     }
     if (s === 'in progress') {

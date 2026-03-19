@@ -1,0 +1,96 @@
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@12345'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@12345'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'irumvajmv@gmail.com'
+CLEAN EMAIL:  'irumvajmv@gmail.com'
+RAW PASSWORD: 'munyabugingo123'
+AUTH RESULT:  None
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'admin@12345'
+AUTH RESULT:  None
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@12345'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'ngaboelyse5@gmail.com'
+CLEAN EMAIL:  'ngaboelyse5@gmail.com'
+RAW PASSWORD: 'Ngabo123'
+AUTH RESULT:  NGABO Elyse (Technician)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@12345'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'ngaboelyse5@gmail.com'
+CLEAN EMAIL:  'ngaboelyse5@gmail.com'
+RAW PASSWORD: 'Ngabo123'
+AUTH RESULT:  NGABO Elyse (Technician)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@12345'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'ngaboelyse5@gmail.com'
+CLEAN EMAIL:  'ngaboelyse5@gmail.com'
+RAW PASSWORD: 'Ngabo123'
+AUTH RESULT:  NGABO Elyse (Technician)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@5283'
+AUTH RESULT:  None
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@12345'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'amos@gmail.com'
+CLEAN EMAIL:  'amos@gmail.com'
+RAW PASSWORD: 'Amos123'
+AUTH RESULT:  None
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'amos@gmail.com'
+CLEAN EMAIL:  'amos@gmail.com'
+RAW PASSWORD: 'Amos@123'
+AUTH RESULT:  None
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'amos@gmail.com'
+CLEAN EMAIL:  'amos@gmail.com'
+RAW PASSWORD: 'Amos@5283'
+AUTH RESULT:  None
+
+--- LOGIN ATTEMPT ---
+RAW EMAIL:    'venustendikumana2003@gmail.com'
+CLEAN EMAIL:  'venustendikumana2003@gmail.com'
+RAW PASSWORD: 'Admin@12345'
+AUTH RESULT:  Venuste NDIKUMANA (Administrator)
+

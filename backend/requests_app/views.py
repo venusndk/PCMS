@@ -290,6 +290,7 @@ class UpdateRequestStatusView(APIView):
             # FIX #8: Wrap status update and technician status reset in an atomic transaction.
             with transaction.atomic():
                 req.status = serializer.validated_data['status']
+                req.updated_by = request.user
                 req.save()
 
                 # If resolved, set technician back to Available
