@@ -267,7 +267,7 @@ export default function Landing() {
           initial={{ opacity: 0, scale: 0.8, rotateY: -10 }}
           animate={{ opacity: 1, scale: 1, rotateY: 0 }}
           transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="hidden lg:block relative perspective-1000"
+          className="block mt-12 lg:mt-0 relative perspective-1000 max-w-md md:max-w-xl mx-auto lg:max-w-none"
         >
           <motion.div
             animate={{ 
