@@ -9,4 +9,7 @@ export const authService = {
   updateMe:       (data)     => api.put('/api/me/', data),
   changePassword: (data)     => api.post('/api/change-password/', data),
   refreshToken:   (refresh)  => api.post('/api/token/refresh/', { refresh }),
+  requestPasswordReset: (email)              => api.post('/api/password-reset/request/', { email }),
+  verifyOTP:            (email, otp)         => api.post('/api/password-reset/verify/',  { email, otp }),
+  confirmPasswordReset: (data)               => api.post('/api/password-reset/confirm/', data),
 };

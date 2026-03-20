@@ -109,9 +109,32 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 
 # ─────────────────────────────────────────────────────────────
-# CHANGE PASSWORD SERIALIZER
-# ─────────────────────────────────────────────────────────────
 class ChangePasswordSerializer(serializers.Serializer):
     """Used when a user wants to change their password."""
     old_password = serializers.CharField(write_only=True)
     new_password = serializers.CharField(write_only=True, min_length=6)
+# ─────────────────────────────────────────────────────────────
+# PASSWORD RESET SERIALIZERS
+# ─────────────────────────────────────────────────────────────
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Validates email for password reset request."""
+    email = serializers.EmailField()
+
+
+class OTPVerifySerializer(serializers.Serializer):
+    """Validates OTP code."""
+    email = serializers.EmailField()
+    otp   = serializers.CharField(max_length=6, min_length=6)
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Updates password."""
+    email        = serializers.EmailField()
+    otp          = serializers.CharField(max_length=6, min_length=6)
+    new_password = serializers.CharField(write_only=True, min_length=6)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data

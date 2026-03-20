@@ -6,6 +6,9 @@ import DashboardLayout from '../layouts/DashboardLayout';
 // Auth pages
 import Login          from '../pages/auth/Login';
 import Register       from '../pages/auth/Register';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import VerifyOTP      from '../pages/auth/VerifyOTP';
+import ResetPassword  from '../pages/auth/ResetPassword';
 
 // Landing
 import Landing        from '../pages/Landing';
@@ -31,8 +34,11 @@ export default function AppRouter() {
       <Route path="/" element={<Landing />} />
 
       {/* Public routes */}
-      <Route path="/login"          element={<Login />} />
-      <Route path="/submit-request" element={<CreateRequest />} />
+      <Route path="/login"           element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/verify-otp"      element={<VerifyOTP />} />
+      <Route path="/reset-password"  element={<ResetPassword />} />
+      <Route path="/submit-request"  element={<CreateRequest />} />
 
       {/*
         FIX #13: /register is now admin-only.

@@ -103,3 +103,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_technician(self):
         """Check if user is a Technician."""
         return self.role == 'Technician'
+
+
+# ─────────────────────────────────────────────────────────────
+# PASSWORD RESET MODEL
+# ─────────────────────────────────────────────────────────────
+class PasswordReset(models.Model):
+    """
+    Stores OTPs for password reset requests.
+    Valid for 10 minutes.
+    """
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='password_resets')
+    otp        = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    attempts   = models.IntegerField(default=0)
+    is_used    = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)  # For the 3-step flow
+
+    class Meta:
+        db_table = 'password_resets'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Reset for {self.user.email} at {self.created_at}"
+
+    def is_expired(self):
+        """Check if the reset request is older than 10 minutes."""
+        from django.utils import timezone
+        from datetime import timedelta
+        return timezone.now() > self.created_at + timedelta(minutes=10)

@@ -17,11 +17,14 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_spectacular.utils import extend_schema, OpenApiExample
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from .serializers import (
     RegisterSerializer, LoginSerializer, UserSerializer,
-    UpdateUserSerializer, ChangePasswordSerializer
+    UpdateUserSerializer, ChangePasswordSerializer,
+    PasswordResetRequestSerializer, OTPVerifySerializer, 
+    PasswordResetConfirmSerializer
 )
 from .permissions import IsAdministrator
 
@@ -294,3 +297,140 @@ class TestingView(APIView):
             "timestamp": timezone.now().isoformat(),
             "environment": "Development" if connection.settings_dict['NAME'] == 'PCM' else "Production"
         }, status=status.HTTP_200_OK)
+# ─────────────────────────────────────────────────────────────
+# PASSWORD RESET SYSTEM
+# ─────────────────────────────────────────────────────────────
+import uuid
+import random
+from django.core.mail import send_mail
+from .models import PasswordReset
+
+@extend_schema(tags=['Authentication'])
+class PasswordResetRequestView(APIView):
+    """
+    Step 1: Request a password reset. Sends a 6-digit OTP to the user's email.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetRequestSerializer
+
+    @extend_schema(summary="Request OTP")
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            user = User.objects.filter(email=email).first()
+            
+            if user:
+                # Generate 6-digit OTP
+                otp = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+                
+                # Save to database (Invalidate old ones)
+                PasswordReset.objects.filter(user=user, is_used=False).update(is_used=True)
+                PasswordReset.objects.create(user=user, otp=otp)
+                
+                # Send Email
+                message = (
+                    f"Hello {user.first_name},\n\n"
+                    f"Your PCMS password reset OTP is: {otp}\n\n"
+                    f"This code will expire in 10 minutes.\n"
+                    f"If you did not request this, please ignore this email."
+                )
+                
+                try:
+                    send_mail(
+                        'PCMS - Password Reset OTP',
+                        message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [email],
+                        fail_silently=False,
+                    )
+                    print(f"DEBUG: OTP sent to {email}")
+                except Exception as e:
+                    print(f"ERROR Sending OTP to {email}: {str(e)}")
+
+            return Response({
+                "message": "If an account exists, an OTP has been sent."
+            }, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(tags=['Authentication'])
+class PasswordResetVerifyView(APIView):
+    """
+    Step 2: Verify the OTP code.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = OTPVerifySerializer
+
+    @extend_schema(summary="Verify OTP")
+    def post(self, request):
+        serializer = OTPVerifySerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            otp   = serializer.validated_data['otp']
+            
+            # Find latest unused/unverified reset request
+            reset_req = PasswordReset.objects.filter(
+                user__email=email, is_used=False, is_verified=False
+            ).first()
+            
+            if not reset_req or reset_req.is_expired():
+                return Response({"error": "OTP expired or not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
+                
+            # Check attempts
+            if reset_req.attempts >= 5:
+                reset_req.is_used = True
+                reset_req.save()
+                return Response({"error": "Too many failed attempts. Please request a new OTP."}, status=status.HTTP_400_BAD_REQUEST)
+                
+            if reset_req.otp != otp:
+                reset_req.attempts += 1
+                reset_req.save()
+                return Response({"error": "Invalid OTP code."}, status=status.HTTP_400_BAD_REQUEST)
+                
+            # Success!
+            reset_req.is_verified = True
+            reset_req.save()
+            
+            return Response({"message": "OTP verified successfully."}, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(tags=['Authentication'])
+class PasswordResetConfirmView(APIView):
+    """
+    Step 3: Reset password after verifying OTP.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetConfirmSerializer
+
+    @extend_schema(summary="Reset Password")
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            email        = serializer.validated_data['email']
+            otp          = serializer.validated_data['otp']
+            new_password = serializer.validated_data['new_password']
+            
+            # Find the verified reset request
+            reset_req = PasswordReset.objects.filter(
+                user__email=email, otp=otp, is_verified=True, is_used=False
+            ).first()
+            
+            if not reset_req or reset_req.is_expired():
+                return Response({"error": "Invalid session or expired OTP."}, status=status.HTTP_400_BAD_REQUEST)
+                
+            # Success! Update password
+            user = reset_req.user
+            user.set_password(new_password)
+            user.save()
+            
+            # Mark as used (Consume OTP)
+            reset_req.is_used = True
+            reset_req.save()
+            
+            return Response({"message": "Password has been reset successfully. You can now login."}, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
