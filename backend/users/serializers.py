@@ -64,21 +64,16 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         """Check that email and password are correct."""
-        email_clean = data['email'].strip()
+        email    = data.get('email', '').strip()
+        password = data.get('password')
         
-        user = authenticate(username=email_clean, password=data['password'])
+        user = authenticate(username=email, password=password)
         
-        with open('login_debug.txt', 'a', encoding='utf-8') as f:
-            f.write(f"--- LOGIN ATTEMPT ---\n")
-            f.write(f"RAW EMAIL:    {repr(data['email'])}\n")
-            f.write(f"CLEAN EMAIL:  {repr(email_clean)}\n")
-            f.write(f"RAW PASSWORD: {repr(data['password'])}\n")
-            f.write(f"AUTH RESULT:  {user}\n\n")
-            
         if not user:
             raise serializers.ValidationError("Invalid email or password.")
         if not user.is_active:
             raise serializers.ValidationError("This account has been deactivated.")
+            
         data['user'] = user
         return data
 
