@@ -655,4 +655,5 @@ test_fetch.py
 test_list.py
 test_schema.py
 test_spectacular.py
-error.html
+error.html
+.env
